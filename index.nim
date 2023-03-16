@@ -356,7 +356,7 @@ nbCodeSkip:
   # Automatically serve the current directory
   let url = window.newServer("")
 
-nbText:"""  
+nbText: """  
 When you serve a folder, you probably want to run JavaScript & TypeScript 
 files and show the output in the UI. To do that, you can use 
 `scriptRuntime=`, which makes WebUI act like Nodejs.
