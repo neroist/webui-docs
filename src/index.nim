@@ -76,25 +76,25 @@ nbCodeSkip:
   const html = "<html>Hello!</html>"
 
   # Chrome
-  window.show(html, BrowserChrome)
+  window.showBrowser(html, BrowserChrome) # you could also use showWindow
 
   # Firefox
-  window.show(html, BrowserFirefox)
+  window.showBrowser(html, BrowserFirefox)
 
   # Microsoft Edge
-  window.show(html, BrowserEdge)
+  window.showBrowser(html, BrowserEdge)
 
   # Chromium
-  window.show(html, BrowserChromium)
+  window.showBrowser(html, BrowserChromium)
 
   # Safari
-  window.show(html, BrowserSafari)
+  window.showBrowser(html, BrowserSafari)
 
   # Any available web browser
-  window.show(html, BrowserAny)
+  window.showBrowser(html, BrowserAny)
 
 nbText: """
-If you need to update the whole UI content, you can use `refresh()`, which
+If you need to update the whole UI content, you can also use `show()`, which
 allows you to refresh the window UI with any new HTML content.
 """
 
@@ -104,14 +104,14 @@ nbCodeSkip:
   let html = "<html>Hello</html>"
   let newHtml = "<html>New World!</html>"
 
-  # Open a window in Chrome
-  window.show(html, BrowserChrome)
+  # Open a window
+  window.show(html)
 
   # Later...
   sleep(5000)
 
   # Refresh the same window with the new content
-  window.refresh(newHtml)
+  window.show(newHtml)
 
 nbText: """
 ### Window Status
@@ -354,7 +354,7 @@ nbCodeSkip:
 
 nbCodeSkip:
   # Automatically serve the current directory
-  let url = window.newServer("")
+  let url = window.newServer()
 
 nbText: """  
 When you serve a folder, you probably want to run JavaScript & TypeScript 

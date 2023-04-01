@@ -81,37 +81,37 @@ window.show(html) <span class="hljs-comment"># Shows html in any installed web b
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
 <span class="hljs-comment"># Chrome</span>
-window.show(html, <span class="hljs-type">BrowserChrome</span>)
+window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow!</span>
 
 <span class="hljs-comment"># Firefox</span>
-window.show(html, <span class="hljs-type">BrowserFirefox</span>)
+window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
 
 <span class="hljs-comment"># Microsoft Edge</span>
-window.show(html, <span class="hljs-type">BrowserEdge</span>)
+window.showBrowser(html, <span class="hljs-type">BrowserEdge</span>)
 
 <span class="hljs-comment"># Chromium</span>
-window.show(html, <span class="hljs-type">BrowserChromium</span>)
+window.showBrowser(html, <span class="hljs-type">BrowserChromium</span>)
 
 <span class="hljs-comment"># Safari</span>
-window.show(html, <span class="hljs-type">BrowserSafari</span>)
+window.showBrowser(html, <span class="hljs-type">BrowserSafari</span>)
 
 <span class="hljs-comment"># Any available web browser</span>
-window.show(html, <span class="hljs-type">BrowserAny</span>)</pre>
-<p>If you need to update the whole UI content, you can use <code>refresh()</code>, which
-allows you to refresh the window UI with any new HTML content.</p>
+window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)</pre>
+<p>If you need to update the whole UI content, you can use <code>show()</code>, which
+also allows you to refresh the window UI with any new HTML content.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> std/os
 
 <span class="hljs-keyword">let</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>
 <span class="hljs-keyword">let</span> newHtml = <span class="hljs-string">&quot;&lt;html&gt;New World!&lt;/html&gt;&quot;</span>
 
-<span class="hljs-comment"># Open a window in Chrome</span>
-window.show(html, <span class="hljs-type">BrowserChrome</span>)
+<span class="hljs-comment"># Open a window</span>
+window.show(html)
 
 <span class="hljs-comment"># Later...</span>
 sleep(<span class="hljs-number">5000</span>)
 
 <span class="hljs-comment"># Refresh the same window with the new content</span>
-window.refresh(newHtml)</pre>
+window.show(newHtml)</pre>
 <h3>Window Status</h3>
 <p>In some exceptional cases, you want to know if any opened window exists,
 for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true</code> or <code>false</code>.</p>
@@ -238,7 +238,7 @@ URL of the server.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Serve a folder</span>
 <span class="hljs-keyword">let</span> url = window.newServer(<span class="hljs-string">&quot;/path/to/folder&quot;</span>)</pre>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Automatically serve the current directory</span>
-<span class="hljs-keyword">let</span> url = window.newServer(<span class="hljs-string">&quot;&quot;</span>)</pre>
+<span class="hljs-keyword">let</span> url = window.newServer()</pre>
 <p>When you serve a folder, you probably want to run JavaScript &amp; TypeScript
 files and show the output in the UI. To do that, you can use
 <code>scriptRuntime=</code>, which makes WebUI act like Nodejs.</p>
@@ -350,26 +350,26 @@ nbCodeSkip:
   <span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
   <span class="hljs-comment"># Chrome</span>
-  window.show(html, <span class="hljs-type">BrowserChrome</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow!</span>
 
   <span class="hljs-comment"># Firefox</span>
-  window.show(html, <span class="hljs-type">BrowserFirefox</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
 
   <span class="hljs-comment"># Microsoft Edge</span>
-  window.show(html, <span class="hljs-type">BrowserEdge</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserEdge</span>)
 
   <span class="hljs-comment"># Chromium</span>
-  window.show(html, <span class="hljs-type">BrowserChromium</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserChromium</span>)
 
   <span class="hljs-comment"># Safari</span>
-  window.show(html, <span class="hljs-type">BrowserSafari</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserSafari</span>)
 
   <span class="hljs-comment"># Any available web browser</span>
-  window.show(html, <span class="hljs-type">BrowserAny</span>)
+  window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-If you need to update the whole UI content, you can use `refresh()`, which
-allows you to refresh the window UI with any new HTML content.
+If you need to update the whole UI content, you can use `show()`, which
+also allows you to refresh the window UI with any new HTML content.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
@@ -378,14 +378,14 @@ nbCodeSkip:
   <span class="hljs-keyword">let</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>
   <span class="hljs-keyword">let</span> newHtml = <span class="hljs-string">&quot;&lt;html&gt;New World!&lt;/html&gt;&quot;</span>
 
-  <span class="hljs-comment"># Open a window in Chrome</span>
-  window.show(html, <span class="hljs-type">BrowserChrome</span>)
+  <span class="hljs-comment"># Open a window</span>
+  window.show(html)
 
   <span class="hljs-comment"># Later...</span>
   sleep(<span class="hljs-number">5000</span>)
 
   <span class="hljs-comment"># Refresh the same window with the new content</span>
-  window.refresh(newHtml)
+  window.show(newHtml)
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 ### Window Status
@@ -628,7 +628,7 @@ nbCodeSkip:
 
 nbCodeSkip:
   <span class="hljs-comment"># Automatically serve the current directory</span>
-  <span class="hljs-keyword">let</span> url = window.newServer(<span class="hljs-string">&quot;&quot;</span>)
+  <span class="hljs-keyword">let</span> url = window.newServer()
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;  
 When you serve a folder, you probably want to run JavaScript &amp; TypeScript 
