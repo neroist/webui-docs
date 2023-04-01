@@ -81,7 +81,7 @@ window.show(html) <span class="hljs-comment"># Shows html in any installed web b
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
 <span class="hljs-comment"># Chrome</span>
-window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow!</span>
+window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
 
 <span class="hljs-comment"># Firefox</span>
 window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
@@ -97,8 +97,8 @@ window.showBrowser(html, <span class="hljs-type">BrowserSafari</span>)
 
 <span class="hljs-comment"># Any available web browser</span>
 window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)</pre>
-<p>If you need to update the whole UI content, you can use <code>show()</code>, which
-also allows you to refresh the window UI with any new HTML content.</p>
+<p>If you need to update the whole UI content, you can also use <code>show()</code>, which
+allows you to refresh the window UI with any new HTML content.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> std/os
 
 <span class="hljs-keyword">let</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>
@@ -136,11 +136,10 @@ element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;
 back to the Javascript code for you.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">bool</span>:
   <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span></pre>
-<p>This also applies to <code>bindAll()</code>.</p>
 <h3>Bind All</h3>
-<p>You can also automatically bind all HTML elements with one function call.</p>
-<pre class="nohighlight hljs nim">window.bindAll() <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding all HTML elements!&quot;</span></pre>
+<p>You can also listen for events by binding an empty ID.</p>
+<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span></pre>
 <h2>Application</h2>
 <h3>Wait</h3>
 <p>It is essential to call <code>wait()</code> at the end of your main function, after
@@ -350,7 +349,7 @@ nbCodeSkip:
   <span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
   <span class="hljs-comment"># Chrome</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow!</span>
+  window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
 
   <span class="hljs-comment"># Firefox</span>
   window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
@@ -368,8 +367,8 @@ nbCodeSkip:
   window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-If you need to update the whole UI content, you can use `show()`, which
-also allows you to refresh the window UI with any new HTML content.
+If you need to update the whole UI content, you can also use `show()`, which
+allows you to refresh the window UI with any new HTML content.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
@@ -437,18 +436,14 @@ nbCodeSkip:
     <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span>
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-This also applies to `bindAll()`.
-&quot;&quot;&quot;</span>
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;
 ### Bind All
 
-You can also automatically bind all HTML elements with one function call.
+You can also listen for events by binding an empty ID.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
-  window.bindAll() <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding all HTML elements!&quot;</span>
+  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span>
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 ## Application

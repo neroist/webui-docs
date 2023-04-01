@@ -163,18 +163,14 @@ nbCodeSkip:
     return 1 + 2 == 3  # true
 
 nbText: """
-This also applies to `bindAll()`.
-"""
-
-nbText: """
 ### Bind All
 
-You can also automatically bind all HTML elements with one function call.
+You can also listen for events by binding an empty ID.
 """
 
 nbCodeSkip:
-  window.bindAll() do (e: Event):
-    echo "Binding all HTML elements!"
+  window.bind("") do (e: Event):
+    echo "Listening for events..."
 
 nbText: """
 ## Application
