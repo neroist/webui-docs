@@ -253,7 +253,7 @@ nbText: """
 """
 
 nbImage(
-  "https://webui.me/docs/data/webui_access_denied.png", 
+  "images/webui_access_denied.png", 
   "WebUI \"Access Denied\" Image"
 )
 
