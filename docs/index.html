@@ -48,14 +48,30 @@ pre > code {
 <hr>
 </header><main>
 <h1>WebUI Wrapper for Nim</h1>
+<h2>Table of Contents:</h2>
+<ol>
+<li><a href="#get-started">Get Started</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#windows">Windows</a></li>
+<li><a href="#binding">Binding</a></li>
+<li><a href="#application">Application</a></li>
+<li><a href="#event">Event</a></li>
+<li><a href="#run-javascript">Run JavaScript</a></li>
+<li><a href="#server">Server</a></li>
+</ol>
+<p><a name = "get-started"></a></p>
 <h2>Get Started</h2>
+<hr />
 <p>To begin you need to install the <code>webui</code> library for Nim. This installs
 WebUI's C sources for you.</p>
-<pre class="nohighlight hljs nim">nimble install webui</pre>
+<pre><code class="language-shell">nimble install webui
+</code></pre>
 <p>To see the wrapper's source code, please visit the GitHub repository here:
 <a href="https://github.com/neroist/webui">https://github.com/neroist/webui</a></p>
 <p>WebUI's source code is <a href="https://github.com/alifcommunity/webui">here</a>.</p>
+<p><a name = "example"></a></p>
 <h2>Example</h2>
+<hr />
 <p>A very <em>minimal</em> Nim example:</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> webui
 
@@ -66,7 +82,9 @@ wait() <span class="hljs-comment"># Wait until the window gets closed</span></pr
 <p>To view more complex examples please visit the
 <a href="https://github.com/neroist/webui/tree/main/examples">examples</a>
 directory in my GitHub repository.</p>
+<p><a name = "windows"></a></p>
 <h2>Windows</h2>
+<hr />
 <h3>New Window</h3>
 <p>To create a new window object, you can use <code>newWindow()</code>, which returns a
 new window object.</p>
@@ -124,7 +142,9 @@ for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;A window is running...&quot;</span>
 <span class="hljs-keyword">else</span>:
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span></pre>
+<p><a name = "binding"></a></p>
 <h2>Binding</h2>
+<hr />
 <h3>Bind</h3>
 <p>Use <code>bind()</code> to receive click events when the user clicks on any HTML
 element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt;</code>.</p>
@@ -140,7 +160,9 @@ back to the Javascript code for you.</p>
 <p>You can also listen for events by binding an empty ID.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span></pre>
+<p><a name = "application"></a></p>
 <h2>Application</h2>
+<hr />
 <h3>Wait</h3>
 <p>It is essential to call <code>wait()</code> at the end of your main function, after
 you create/show all your windows. This will make your application run
@@ -188,7 +210,9 @@ wait() <span class="hljs-comment"># this function will never end</span></pre>
 if someone else tries to access the URL, WebUI will show an error. To allow
 multi-user access to the same URL, you can use <code>multiAccess=</code>.</p>
 <pre class="nohighlight hljs nim">window.multiAccess = <span class="hljs-literal">true</span></pre>
+<p><a name = "event"></a></p>
 <h2>Event</h2>
+<hr />
 <h3>Event</h3>
 <p>When you use <code>window.bind()</code>, your application will receive an event every
 time the user clicks on the specified HTML element. The event comes with
@@ -204,7 +228,9 @@ e.elementName  <span class="hljs-comment"># The HTML ID of the clicked element</
 e.window       <span class="hljs-comment"># The current window object</span></pre>
 <p>You can access other attributes like <code>data</code> and <code>response</code>, but those are
 used by WebUI, and are only meant for internal use by the library.</p>
+<p><a name = "run-javascript"></a></p>
 <h2>Run JavaScript</h2>
+<hr />
 <h3>Script</h3>
 <p>You can run JavaScript on any window to read values, update the view, or
 anything else. In addition, you can check for execution errors, as well as
@@ -229,7 +255,9 @@ and check for errors, if any.</p>
       <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
   <span class="hljs-keyword">else</span>:
       <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span></pre>
+<p><a name = "server"></a></p>
 <h2>Server</h2>
+<hr />
 <h3>Server</h3>
 <p>You can use WebUI to serve a folder, which makes WebUI act like a web
 server. To do that, please use <code>newServer()</code>, which returns the complete
@@ -271,35 +299,51 @@ will work only if the server is WebUI.</p>
 </div>
 </footer>
 <section id="source">
-<pre><code class="nohighlight nim hljs"><span class="hljs-keyword">import</span> nimib
+<pre><code class="nohighlight nim hljs"><span class="hljs-keyword">import</span> std/strutils
+
+<span class="hljs-keyword">import</span> nimib
 
 nbInit
 
 nb.title = <span class="hljs-string">&quot;WebUI Nim Docs&quot;</span>
 nb.darkMode()
 
+<span class="hljs-keyword">var</span>
+  nbToc: <span class="hljs-type">NbBlock</span>
+
+<span class="hljs-keyword">template</span> addToc =
+  newNbBlock(<span class="hljs-string">&quot;nbText&quot;</span>, <span class="hljs-literal">false</span>, nb, nbToc, <span class="hljs-string">&quot;&quot;</span>):
+    nbToc.output = <span class="hljs-string">&quot;## Table of Contents:</span><span class="hljs-meta">\n</span><span class="hljs-meta">\n</span><span class="hljs-string">&quot;</span>
+
+<span class="hljs-keyword">template</span> nbSection(name: <span class="hljs-built_in">string</span>) =
+  <span class="hljs-keyword">let</span> anchorName = name.toLower.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;-&quot;</span>)
+  nbText <span class="hljs-string">&quot;&lt;a name = </span><span class="hljs-meta">\&quot;</span><span class="hljs-string">$1</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">&gt;&lt;/a&gt;</span><span class="hljs-meta">\n</span><span class="hljs-string">## $2</span><span class="hljs-meta">\n</span><span class="hljs-meta">\n</span><span class="hljs-string">---&quot;</span> % [anchorName, name]
+  <span class="hljs-comment"># see below, but any number works for a numbered list</span>
+  nbToc.output.add <span class="hljs-string">&quot;1. &lt;a href=</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">#$1</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">&gt;$2&lt;/a&gt;</span><span class="hljs-meta">\n</span><span class="hljs-string">&quot;</span>  % [anchorName, name]
+
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 # WebUI Wrapper for Nim
-
-## Get Started
-
-To begin you need to install the `webui` library for Nim. This installs
-WebUI's C sources for you.
 &quot;&quot;&quot;</span>
 
-nbCodeSkip: 
-  nimble install webui
+addToc()
 
+nbSection: <span class="hljs-string">&quot;Get Started&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
+To begin you need to install the `webui` library for Nim. This installs
+WebUI's C sources for you.
+
+```shell
+nimble install webui
+```
+
 To see the wrapper's source code, please visit the GitHub repository here: 
 &lt;https://github.com/neroist/webui&gt;
 
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 &quot;&quot;&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;Example&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Example
-
 A very *minimal* Nim example:
 &quot;&quot;&quot;</span>
 
@@ -317,9 +361,8 @@ To view more complex examples please visit the
 directory in my GitHub repository.
 &quot;&quot;&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;Windows&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Windows
-
 ### New Window
 
 To create a new window object, you can use `newWindow()`, which returns a 
@@ -409,9 +452,8 @@ nbCodeSkip:
   <span class="hljs-keyword">else</span>:
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;Binding&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Binding
-
 ### Bind
 
 Use `bind()` to receive click events when the user clicks on any HTML 
@@ -445,9 +487,8 @@ nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;Application&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Application
-
 ### Wait
 
 It is essential to call `wait()` at the end of your main function, after 
@@ -535,9 +576,8 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = <span class="hljs-literal">true</span>
 
+nbSection: <span class="hljs-string">&quot;Event&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Event
-
 ### Event
 
 When you use `window.bind()`, your application will receive an event every 
@@ -565,9 +605,8 @@ You can access other attributes like `data` and `response`, but those are
 used by WebUI, and are only meant for internal use by the library.
 &quot;&quot;&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;Run JavaScript&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Run JavaScript
-
 ### Script
 
 You can run JavaScript on any window to read values, update the view, or 
@@ -607,9 +646,8 @@ nbCodeSkip:
     <span class="hljs-keyword">else</span>:
         <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span>
   
+nbSection: <span class="hljs-string">&quot;Server&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-## Server
-
 ### Server
 
 You can use WebUI to serve a folder, which makes WebUI act like a web 

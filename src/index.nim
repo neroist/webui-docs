@@ -1,3 +1,5 @@
+import std/strutils
+
 import nimib
 
 nbInit
@@ -5,28 +7,42 @@ nbInit
 nb.title = "WebUI Nim Docs"
 nb.darkMode()
 
+var
+  nbToc: NbBlock
+
+template addToc =
+  newNbBlock("nbText", false, nb, nbToc, ""):
+    nbToc.output = "## Table of Contents:\n\n"
+
+template nbSection(name: string) =
+  let anchorName = name.toLower.replace(" ", "-")
+  nbText "<a name = \"$1\"></a>\n## $2\n\n---" % [anchorName, name]
+  # see below, but any number works for a numbered list
+  nbToc.output.add "1. <a href=\"#$1\">$2</a>\n"  % [anchorName, name]
+
 nbText: """
 # WebUI Wrapper for Nim
-
-## Get Started
-
-To begin you need to install the `webui` library for Nim. This installs
-WebUI's C sources for you.
 """
 
-nbCodeSkip: 
-  nimble install webui
+addToc()
 
+nbSection: "Get Started"
 nbText: """
+To begin you need to install the `webui` library for Nim. This installs
+WebUI's C sources for you.
+
+```shell
+nimble install webui
+```
+
 To see the wrapper's source code, please visit the GitHub repository here: 
 <https://github.com/neroist/webui>
 
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 """
 
+nbSection: "Example"
 nbText: """
-## Example
-
 A very *minimal* Nim example:
 """
 
@@ -44,9 +60,8 @@ To view more complex examples please visit the
 directory in my GitHub repository.
 """
 
+nbSection: "Windows"
 nbText: """
-## Windows
-
 ### New Window
 
 To create a new window object, you can use `newWindow()`, which returns a 
@@ -136,9 +151,8 @@ nbCodeSkip:
   else:
     echo "No window is running."
 
+nbSection: "Binding"
 nbText: """
-## Binding
-
 ### Bind
 
 Use `bind()` to receive click events when the user clicks on any HTML 
@@ -172,9 +186,8 @@ nbCodeSkip:
   window.bind("") do (e: Event):
     echo "Listening for events..."
 
+nbSection: "Application"
 nbText: """
-## Application
-
 ### Wait
 
 It is essential to call `wait()` at the end of your main function, after 
@@ -262,9 +275,8 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = true
 
+nbSection: "Event"
 nbText: """
-## Event
-
 ### Event
 
 When you use `window.bind()`, your application will receive an event every 
@@ -292,9 +304,8 @@ You can access other attributes like `data` and `response`, but those are
 used by WebUI, and are only meant for internal use by the library.
 """
 
+nbSection: "Run JavaScript"
 nbText: """
-## Run JavaScript
-
 ### Script
 
 You can run JavaScript on any window to read values, update the view, or 
@@ -334,9 +345,8 @@ nbCodeSkip:
     else:
         echo "Output: ", res.data # '8'
   
+nbSection: "Server"
 nbText: """
-## Server
-
 ### Server
 
 You can use WebUI to serve a folder, which makes WebUI act like a web 
