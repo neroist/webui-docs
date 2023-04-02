@@ -1,4 +1,6 @@
 import std/strutils
+import std/sequtils
+import std/uri
 
 import nimib
 
@@ -9,16 +11,25 @@ nb.darkMode()
 
 var
   nbToc: NbBlock
+  sections: seq[string]
 
 template addToc =
   newNbBlock("nbText", false, nb, nbToc, ""):
     nbToc.output = "## Table of Contents:\n\n"
 
 template nbSection(name: string) =
-  let anchorName = name.toLower.replace(" ", "-")
-  nbText "<a name = \"$1\"></a>\n## $2\n\n---" % [anchorName, name]
-  # see below, but any number works for a numbered list
-  nbToc.output.add "1. <a href=\"#$1\">$2</a>\n"  % [anchorName, name]
+  let tocName = name.split(' ')[1..^1].join(" ")
+  var anchorName = tocName.toLower.replace(" ", "-").encodeUrl()
+
+  if anchorName in sections:
+    anchorName &= "-" & $sections.count(anchorName)
+
+  sections.add anchorName
+  
+  nbText "<a name=\"$1\"></a>\n$2\n\n---" % [anchorName, name]
+
+  let indent = "  ".repeat(name.split(' ')[0].len - 1)
+  nbToc.output.add indent & "- [$1](#$2)\n" % [tocName, anchorName]
 
 nbText: """
 # WebUI Wrapper for Nim
@@ -26,7 +37,7 @@ nbText: """
 
 addToc()
 
-nbSection: "Get Started"
+nbSection: "## Get Started"
 nbText: """
 To begin you need to install the `webui` library for Nim. This installs
 WebUI's C sources for you.
@@ -41,7 +52,7 @@ To see the wrapper's source code, please visit the GitHub repository here:
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 """
 
-nbSection: "Example"
+nbSection: "## Example"
 nbText: """
 A very *minimal* Nim example:
 """
@@ -60,10 +71,9 @@ To view more complex examples please visit the
 directory in my GitHub repository.
 """
 
-nbSection: "Windows"
+nbSection: "## Windows"
+nbSection: "### New Window"
 nbText: """
-### New Window
-
 To create a new window object, you can use `newWindow()`, which returns a 
 new window object.
 """
@@ -71,9 +81,8 @@ new window object.
 nbCodeSkip:
   let window = newWindow()
  
+nbSection: "### Show Window"
 nbText: """
-### Show Window
-
 To show a window, you can use the `show()` function. If the window is already 
 shown, the UI will get refreshed in the same window.
 """
@@ -128,9 +137,8 @@ nbCodeSkip:
   # Refresh the same window with the new content
   window.show(newHtml)
 
+nbSection: "### Window Status"
 nbText: """
-### Window Status
-
 In some exceptional cases, you want to know if any opened window exists, 
 for that, please use `isAnyWindowRunning()`, which returns `true` or `false`.
 """
@@ -151,10 +159,9 @@ nbCodeSkip:
   else:
     echo "No window is running."
 
-nbSection: "Binding"
+nbSection: "## Binding"
+nbSection: "### Bind"
 nbText: """
-### Bind
-
 Use `bind()` to receive click events when the user clicks on any HTML 
 element with a specific ID, for example `<button id="MyID">Hello</button>`.
 """
@@ -176,9 +183,8 @@ nbCodeSkip:
   window.bind("MyID") do (e: Event) -> bool:
     return 1 + 2 == 3  # true
 
+nbSection: "### Bind All"
 nbText: """
-### Bind All
-
 You can also listen for events by binding an empty ID.
 """
 
@@ -186,10 +192,9 @@ nbCodeSkip:
   window.bind("") do (e: Event):
     echo "Listening for events..."
 
-nbSection: "Application"
+nbSection: "## Application"
+nbSection: "### Wait"
 nbText: """
-### Wait
-
 It is essential to call `wait()` at the end of your main function, after 
 you create/show all your windows. This will make your application run 
 until the user closes all visible windows or when `exit()` is called.
@@ -205,9 +210,8 @@ nbCodeSkip:
 
   wait()
 
+nbSection: "### Exit"
 nbText: """
-### Exit
-
 At any moment, you can call `exit()`, which tries to close all related
 opened windows and make `wait()` break.
 """
@@ -215,9 +219,8 @@ opened windows and make `wait()` break.
 nbCodeSkip:
   exit()
 
+nbSection: "### Close"
 nbText: """
-### Close
-
 You can call `close()` to close a specific window, if there is no running 
 window left `wait()` will break.
 """
@@ -225,9 +228,8 @@ window left `wait()` will break.
 nbCodeSkip:
   window.close()
 
+nbSection: "### App Status"
 nbText: """
-### App Status
-
 In some exceptional cases, like in the WebUI-TypeScript wrapper, you 
 want to know if the whole application still running or not. For that,
 please use `isAppRunning()`, which returns `true` or `false`.
@@ -239,9 +241,8 @@ nbCodeSkip:
   else:
     echo "The application is closed."
 
+nbSection: "### Startup Timeout"
 nbText: """
-### Startup Timeout
-
 WebUI waits a couple of seconds to let the web browser start and connect.
 You can control this behavior by using `setTimeout()`.
 """
@@ -257,9 +258,7 @@ nbCodeSkip:
   setTimeout(0)
   wait() # this function will never end
 
-nbText: """  
-### Multi Access
-"""
+nbSection: "### Multi Access"
 
 nbImage(
   "images/webui_access_denied.png", 
@@ -275,10 +274,9 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = true
 
-nbSection: "Event"
+nbSection: "## Event"
+nbSection: "### Event"
 nbText: """
-### Event
-
 When you use `window.bind()`, your application will receive an event every 
 time the user clicks on the specified HTML element. The event comes with 
 the `elementName`, which is the HTML ID of the clicked element, for example, 
@@ -304,10 +302,9 @@ You can access other attributes like `data` and `response`, but those are
 used by WebUI, and are only meant for internal use by the library.
 """
 
-nbSection: "Run JavaScript"
+nbSection: "## Run JavaScript"
+nbSection: "### Script"
 nbText: """
-### Script
-
 You can run JavaScript on any window to read values, update the view, or 
 anything else. In addition, you can check for execution errors, as well as 
 receive data.
@@ -345,10 +342,9 @@ nbCodeSkip:
     else:
         echo "Output: ", res.data # '8'
   
-nbSection: "Server"
+nbSection: "## Server"
+nbSection: "### Server"
 nbText: """
-### Server
-
 You can use WebUI to serve a folder, which makes WebUI act like a web 
 server. To do that, please use `newServer()`, which returns the complete 
 URL of the server.

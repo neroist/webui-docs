@@ -49,17 +49,56 @@ pre > code {
 </header><main>
 <h1>WebUI Wrapper for Nim</h1>
 <h2>Table of Contents:</h2>
-<ol>
+<ul>
+<li><a href="#okay">Okay</a>
+<ul>
 <li><a href="#get-started">Get Started</a></li>
 <li><a href="#example">Example</a></li>
-<li><a href="#windows">Windows</a></li>
-<li><a href="#binding">Binding</a></li>
-<li><a href="#application">Application</a></li>
-<li><a href="#event">Event</a></li>
-<li><a href="#run-javascript">Run JavaScript</a></li>
-<li><a href="#server">Server</a></li>
-</ol>
-<p><a name = "get-started"></a></p>
+<li><a href="#windows">Windows</a>
+<ul>
+<li><a href="#new-window">New Window</a></li>
+<li><a href="#show-window">Show Window</a></li>
+<li><a href="#window-status">Window Status</a></li>
+</ul>
+</li>
+<li><a href="#binding">Binding</a>
+<ul>
+<li><a href="#bind">Bind</a></li>
+<li><a href="#bind-all">Bind All</a></li>
+</ul>
+</li>
+<li><a href="#application">Application</a>
+<ul>
+<li><a href="#wait">Wait</a></li>
+<li><a href="#exit">Exit</a></li>
+<li><a href="#close">Close</a></li>
+<li><a href="#app-status">App Status</a></li>
+<li><a href="#startup-timeout">Startup Timeout</a></li>
+<li><a href="#multi-access">Multi Access</a></li>
+</ul>
+</li>
+<li><a href="#event">Event</a>
+<ul>
+<li><a href="#event-1">Event</a></li>
+</ul>
+</li>
+<li><a href="#run-javascript">Run JavaScript</a>
+<ul>
+<li><a href="#script">Script</a></li>
+</ul>
+</li>
+<li><a href="#server">Server</a>
+<ul>
+<li><a href="#server-1">Server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><a name="okay"></a></p>
+<h1>Okay</h1>
+<hr />
+<p><a name="get-started"></a></p>
 <h2>Get Started</h2>
 <hr />
 <p>To begin you need to install the <code>webui</code> library for Nim. This installs
@@ -69,7 +108,7 @@ WebUI's C sources for you.</p>
 <p>To see the wrapper's source code, please visit the GitHub repository here:
 <a href="https://github.com/neroist/webui">https://github.com/neroist/webui</a></p>
 <p>WebUI's source code is <a href="https://github.com/alifcommunity/webui">here</a>.</p>
-<p><a name = "example"></a></p>
+<p><a name="example"></a></p>
 <h2>Example</h2>
 <hr />
 <p>A very <em>minimal</em> Nim example:</p>
@@ -82,14 +121,18 @@ wait() <span class="hljs-comment"># Wait until the window gets closed</span></pr
 <p>To view more complex examples please visit the
 <a href="https://github.com/neroist/webui/tree/main/examples">examples</a>
 directory in my GitHub repository.</p>
-<p><a name = "windows"></a></p>
+<p><a name="windows"></a></p>
 <h2>Windows</h2>
 <hr />
+<p><a name="new-window"></a></p>
 <h3>New Window</h3>
+<hr />
 <p>To create a new window object, you can use <code>newWindow()</code>, which returns a
 new window object.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">let</span> window = newWindow()</pre>
+<p><a name="show-window"></a></p>
 <h3>Show Window</h3>
+<hr />
 <p>To show a window, you can use the <code>show()</code> function. If the window is already
 shown, the UI will get refreshed in the same window.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
@@ -130,7 +173,9 @@ sleep(<span class="hljs-number">5000</span>)
 
 <span class="hljs-comment"># Refresh the same window with the new content</span>
 window.show(newHtml)</pre>
+<p><a name="window-status"></a></p>
 <h3>Window Status</h3>
+<hr />
 <p>In some exceptional cases, you want to know if any opened window exists,
 for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true</code> or <code>false</code>.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">if</span> isAnyWindowRunning():
@@ -142,10 +187,12 @@ for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;A window is running...&quot;</span>
 <span class="hljs-keyword">else</span>:
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span></pre>
-<p><a name = "binding"></a></p>
+<p><a name="binding"></a></p>
 <h2>Binding</h2>
 <hr />
+<p><a name="bind"></a></p>
 <h3>Bind</h3>
+<hr />
 <p>Use <code>bind()</code> to receive click events when the user clicks on any HTML
 element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt;</code>.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
@@ -156,14 +203,18 @@ element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;
 back to the Javascript code for you.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">bool</span>:
   <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span></pre>
+<p><a name="bind-all"></a></p>
 <h3>Bind All</h3>
+<hr />
 <p>You can also listen for events by binding an empty ID.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span></pre>
-<p><a name = "application"></a></p>
+<p><a name="application"></a></p>
 <h2>Application</h2>
 <hr />
+<p><a name="wait"></a></p>
 <h3>Wait</h3>
+<hr />
 <p>It is essential to call <code>wait()</code> at the end of your main function, after
 you create/show all your windows. This will make your application run
 until the user closes all visible windows or when <code>exit()</code> is called.</p>
@@ -175,15 +226,21 @@ until the user closes all visible windows or when <code>exit()</code> is called.
 <span class="hljs-comment"># or when calling exit()</span>
 
 wait()</pre>
+<p><a name="exit"></a></p>
 <h3>Exit</h3>
+<hr />
 <p>At any moment, you can call <code>exit()</code>, which tries to close all related
 opened windows and make <code>wait()</code> break.</p>
 <pre class="nohighlight hljs nim">exit()</pre>
+<p><a name="close"></a></p>
 <h3>Close</h3>
+<hr />
 <p>You can call <code>close()</code> to close a specific window, if there is no running
 window left <code>wait()</code> will break.</p>
 <pre class="nohighlight hljs nim">window.close()</pre>
+<p><a name="app-status"></a></p>
 <h3>App Status</h3>
+<hr />
 <p>In some exceptional cases, like in the WebUI-TypeScript wrapper, you
 want to know if the whole application still running or not. For that,
 please use <code>isAppRunning()</code>, which returns <code>true</code> or <code>false</code>.</p>
@@ -191,7 +248,9 @@ please use <code>isAppRunning()</code>, which returns <code>true</code> or <code
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is still running&quot;</span>
 <span class="hljs-keyword">else</span>:
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is closed.&quot;</span></pre>
+<p><a name="startup-timeout"></a></p>
 <h3>Startup Timeout</h3>
+<hr />
 <p>WebUI waits a couple of seconds to let the web browser start and connect.
 You can control this behavior by using <code>setTimeout()</code>.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Wait 10 seconds for the web browser to start</span>
@@ -201,7 +260,9 @@ wait()    <span class="hljs-comment"># After 10 seconds, if the web browser</spa
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Wait forever.</span>
 setTimeout(<span class="hljs-number">0</span>)
 wait() <span class="hljs-comment"># this function will never end</span></pre>
+<p><a name="multi-access"></a></p>
 <h3>Multi Access</h3>
+<hr />
 <figure>
 <img src=".\images\webui_access_denied.png" alt="WebUI &quot;Access Denied&quot; Image">
 <figcaption>WebUI &quot;Access Denied&quot; Image</figcaption>
@@ -210,10 +271,12 @@ wait() <span class="hljs-comment"># this function will never end</span></pre>
 if someone else tries to access the URL, WebUI will show an error. To allow
 multi-user access to the same URL, you can use <code>multiAccess=</code>.</p>
 <pre class="nohighlight hljs nim">window.multiAccess = <span class="hljs-literal">true</span></pre>
-<p><a name = "event"></a></p>
+<p><a name="event"></a></p>
 <h2>Event</h2>
 <hr />
+<p><a name="event-1"></a></p>
 <h3>Event</h3>
+<hr />
 <p>When you use <code>window.bind()</code>, your application will receive an event every
 time the user clicks on the specified HTML element. The event comes with
 the <code>elementName</code>, which is the HTML ID of the clicked element, for example,
@@ -228,10 +291,12 @@ e.elementName  <span class="hljs-comment"># The HTML ID of the clicked element</
 e.window       <span class="hljs-comment"># The current window object</span></pre>
 <p>You can access other attributes like <code>data</code> and <code>response</code>, but those are
 used by WebUI, and are only meant for internal use by the library.</p>
-<p><a name = "run-javascript"></a></p>
+<p><a name="run-javascript"></a></p>
 <h2>Run JavaScript</h2>
 <hr />
+<p><a name="script"></a></p>
 <h3>Script</h3>
+<hr />
 <p>You can run JavaScript on any window to read values, update the view, or
 anything else. In addition, you can check for execution errors, as well as
 receive data.</p>
@@ -255,10 +320,12 @@ and check for errors, if any.</p>
       <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
   <span class="hljs-keyword">else</span>:
       <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span></pre>
-<p><a name = "server"></a></p>
+<p><a name="server"></a></p>
 <h2>Server</h2>
 <hr />
+<p><a name="server-1"></a></p>
 <h3>Server</h3>
+<hr />
 <p>You can use WebUI to serve a folder, which makes WebUI act like a web
 server. To do that, please use <code>newServer()</code>, which returns the complete
 URL of the server.</p>
@@ -300,6 +367,8 @@ will work only if the server is WebUI.</p>
 </footer>
 <section id="source">
 <pre><code class="nohighlight nim hljs"><span class="hljs-keyword">import</span> std/strutils
+<span class="hljs-keyword">import</span> std/sequtils
+<span class="hljs-keyword">import</span> std/uri
 
 <span class="hljs-keyword">import</span> nimib
 
@@ -310,24 +379,33 @@ nb.darkMode()
 
 <span class="hljs-keyword">var</span>
   nbToc: <span class="hljs-type">NbBlock</span>
+  sections: <span class="hljs-built_in">seq</span>[<span class="hljs-built_in">string</span>]
 
 <span class="hljs-keyword">template</span> addToc =
   newNbBlock(<span class="hljs-string">&quot;nbText&quot;</span>, <span class="hljs-literal">false</span>, nb, nbToc, <span class="hljs-string">&quot;&quot;</span>):
     nbToc.output = <span class="hljs-string">&quot;## Table of Contents:</span><span class="hljs-meta">\n</span><span class="hljs-meta">\n</span><span class="hljs-string">&quot;</span>
 
 <span class="hljs-keyword">template</span> nbSection(name: <span class="hljs-built_in">string</span>) =
-  <span class="hljs-keyword">let</span> anchorName = name.toLower.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;-&quot;</span>)
-  nbText <span class="hljs-string">&quot;&lt;a name = </span><span class="hljs-meta">\&quot;</span><span class="hljs-string">$1</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">&gt;&lt;/a&gt;</span><span class="hljs-meta">\n</span><span class="hljs-string">## $2</span><span class="hljs-meta">\n</span><span class="hljs-meta">\n</span><span class="hljs-string">---&quot;</span> % [anchorName, name]
-  <span class="hljs-comment"># see below, but any number works for a numbered list</span>
-  nbToc.output.add <span class="hljs-string">&quot;1. &lt;a href=</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">#$1</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">&gt;$2&lt;/a&gt;</span><span class="hljs-meta">\n</span><span class="hljs-string">&quot;</span>  % [anchorName, name]
+  <span class="hljs-keyword">let</span> tocName = name.split(<span class="hljs-string">' '</span>)[<span class="hljs-number">1.</span>.^<span class="hljs-number">1</span>].join(<span class="hljs-string">&quot; &quot;</span>)
+  <span class="hljs-keyword">var</span> anchorName = tocName.toLower.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;-&quot;</span>).encodeUrl()
+
+  <span class="hljs-keyword">if</span> anchorName <span class="hljs-keyword">in</span> sections:
+    anchorName &amp;= <span class="hljs-string">&quot;-&quot;</span> &amp; $sections.count(anchorName)
+
+  sections.add anchorName
+  
+  nbText <span class="hljs-string">&quot;&lt;a name=</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">$1</span><span class="hljs-meta">\&quot;</span><span class="hljs-string">&gt;&lt;/a&gt;</span><span class="hljs-meta">\n</span><span class="hljs-string">$2</span><span class="hljs-meta">\n</span><span class="hljs-meta">\n</span><span class="hljs-string">---&quot;</span> % [anchorName, name]
+
+  <span class="hljs-keyword">let</span> indent = <span class="hljs-string">&quot;  &quot;</span>.repeat(name.split(<span class="hljs-string">' '</span>)[<span class="hljs-number">0</span>].len - <span class="hljs-number">1</span>)
+  nbToc.output.add indent &amp; <span class="hljs-string">&quot;- [$1](#$2)</span><span class="hljs-meta">\n</span><span class="hljs-string">&quot;</span> % [tocName, anchorName]
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 # WebUI Wrapper for Nim
 &quot;&quot;&quot;</span>
 
 addToc()
-
-nbSection: <span class="hljs-string">&quot;Get Started&quot;</span>
+nbSection: <span class="hljs-string">&quot;# Okay&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Get Started&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 To begin you need to install the `webui` library for Nim. This installs
 WebUI's C sources for you.
@@ -342,7 +420,7 @@ To see the wrapper's source code, please visit the GitHub repository here:
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 &quot;&quot;&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;Example&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Example&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 A very *minimal* Nim example:
 &quot;&quot;&quot;</span>
@@ -361,10 +439,9 @@ To view more complex examples please visit the
 directory in my GitHub repository.
 &quot;&quot;&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;Windows&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Windows&quot;</span>
+nbSection: <span class="hljs-string">&quot;### New Window&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### New Window
-
 To create a new window object, you can use `newWindow()`, which returns a 
 new window object.
 &quot;&quot;&quot;</span>
@@ -372,9 +449,8 @@ new window object.
 nbCodeSkip:
   <span class="hljs-keyword">let</span> window = newWindow()
  
+nbSection: <span class="hljs-string">&quot;### Show Window&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Show Window
-
 To show a window, you can use the `show()` function. If the window is already 
 shown, the UI will get refreshed in the same window.
 &quot;&quot;&quot;</span>
@@ -429,9 +505,8 @@ nbCodeSkip:
   <span class="hljs-comment"># Refresh the same window with the new content</span>
   window.show(newHtml)
 
+nbSection: <span class="hljs-string">&quot;### Window Status&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Window Status
-
 In some exceptional cases, you want to know if any opened window exists, 
 for that, please use `isAnyWindowRunning()`, which returns `true` or `false`.
 &quot;&quot;&quot;</span>
@@ -452,10 +527,9 @@ nbCodeSkip:
   <span class="hljs-keyword">else</span>:
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;Binding&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Binding&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Bind&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Bind
-
 Use `bind()` to receive click events when the user clicks on any HTML 
 element with a specific ID, for example `&lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt;`.
 &quot;&quot;&quot;</span>
@@ -477,9 +551,8 @@ nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">bool</span>:
     <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span>
 
+nbSection: <span class="hljs-string">&quot;### Bind All&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Bind All
-
 You can also listen for events by binding an empty ID.
 &quot;&quot;&quot;</span>
 
@@ -487,10 +560,9 @@ nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;Application&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Application&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Wait&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Wait
-
 It is essential to call `wait()` at the end of your main function, after 
 you create/show all your windows. This will make your application run 
 until the user closes all visible windows or when `exit()` is called.
@@ -506,9 +578,8 @@ nbCodeSkip:
 
   wait()
 
+nbSection: <span class="hljs-string">&quot;### Exit&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Exit
-
 At any moment, you can call `exit()`, which tries to close all related
 opened windows and make `wait()` break.
 &quot;&quot;&quot;</span>
@@ -516,9 +587,8 @@ opened windows and make `wait()` break.
 nbCodeSkip:
   exit()
 
+nbSection: <span class="hljs-string">&quot;### Close&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Close
-
 You can call `close()` to close a specific window, if there is no running 
 window left `wait()` will break.
 &quot;&quot;&quot;</span>
@@ -526,9 +596,8 @@ window left `wait()` will break.
 nbCodeSkip:
   window.close()
 
+nbSection: <span class="hljs-string">&quot;### App Status&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### App Status
-
 In some exceptional cases, like in the WebUI-TypeScript wrapper, you 
 want to know if the whole application still running or not. For that,
 please use `isAppRunning()`, which returns `true` or `false`.
@@ -540,9 +609,8 @@ nbCodeSkip:
   <span class="hljs-keyword">else</span>:
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is closed.&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;### Startup Timeout&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Startup Timeout
-
 WebUI waits a couple of seconds to let the web browser start and connect.
 You can control this behavior by using `setTimeout()`.
 &quot;&quot;&quot;</span>
@@ -558,9 +626,7 @@ nbCodeSkip:
   setTimeout(<span class="hljs-number">0</span>)
   wait() <span class="hljs-comment"># this function will never end</span>
 
-nbText: <span class="hljs-string">&quot;&quot;&quot;  
-### Multi Access
-&quot;&quot;&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Multi Access&quot;</span>
 
 nbImage(
   <span class="hljs-string">&quot;images/webui_access_denied.png&quot;</span>, 
@@ -576,10 +642,9 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = <span class="hljs-literal">true</span>
 
-nbSection: <span class="hljs-string">&quot;Event&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Event&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Event&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Event
-
 When you use `window.bind()`, your application will receive an event every 
 time the user clicks on the specified HTML element. The event comes with 
 the `elementName`, which is the HTML ID of the clicked element, for example, 
@@ -605,10 +670,9 @@ You can access other attributes like `data` and `response`, but those are
 used by WebUI, and are only meant for internal use by the library.
 &quot;&quot;&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;Run JavaScript&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Run JavaScript&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Script&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Script
-
 You can run JavaScript on any window to read values, update the view, or 
 anything else. In addition, you can check for execution errors, as well as 
 receive data.
@@ -646,10 +710,9 @@ nbCodeSkip:
     <span class="hljs-keyword">else</span>:
         <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span>
   
-nbSection: <span class="hljs-string">&quot;Server&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Server&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Server&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-### Server
-
 You can use WebUI to serve a folder, which makes WebUI act like a web 
 server. To do that, please use `newServer()`, which returns the complete 
 URL of the server.
