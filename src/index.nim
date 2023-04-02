@@ -1,6 +1,5 @@
 import std/strutils
 import std/sequtils
-import std/uri
 
 import nimib
 
@@ -19,7 +18,7 @@ template addToc =
 
 template nbSection(name: string) =
   let tocName = name.split(' ')[1..^1].join(" ")
-  var anchorName = tocName.toLower.replace(" ", "-").encodeUrl()
+  var anchorName = tocName.toLower.replace(" ", "-")
 
   if anchorName in sections:
     anchorName &= "-" & $sections.count(anchorName)

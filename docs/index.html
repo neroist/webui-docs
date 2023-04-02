@@ -361,7 +361,6 @@ will work only if the server is WebUI.</p>
 <section id="source">
 <pre><code class="nohighlight nim hljs"><span class="hljs-keyword">import</span> std/strutils
 <span class="hljs-keyword">import</span> std/sequtils
-<span class="hljs-keyword">import</span> std/uri
 
 <span class="hljs-keyword">import</span> nimib
 
@@ -380,7 +379,7 @@ nb.darkMode()
 
 <span class="hljs-keyword">template</span> nbSection(name: <span class="hljs-built_in">string</span>) =
   <span class="hljs-keyword">let</span> tocName = name.split(<span class="hljs-string">' '</span>)[<span class="hljs-number">1.</span>.^<span class="hljs-number">1</span>].join(<span class="hljs-string">&quot; &quot;</span>)
-  <span class="hljs-keyword">var</span> anchorName = tocName.toLower.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;-&quot;</span>).encodeUrl()
+  <span class="hljs-keyword">var</span> anchorName = tocName.toLower.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;-&quot;</span>)
 
   <span class="hljs-keyword">if</span> anchorName <span class="hljs-keyword">in</span> sections:
     anchorName &amp;= <span class="hljs-string">&quot;-&quot;</span> &amp; $sections.count(anchorName)
