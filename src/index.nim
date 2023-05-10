@@ -36,10 +36,9 @@ nbText: """
 
 addToc()
 
-nbSection: "## Get Started"
+nbSection: "## Download And Install"
 nbText: """
-To begin you need to install the `webui` library for Nim. This installs
-WebUI's C sources for you.
+Install the WebUI library from Nimble
 
 ```shell
 nimble install webui
@@ -51,7 +50,7 @@ To see the wrapper's source code, please visit the GitHub repository here:
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 """
 
-nbSection: "## Example"
+nbSection: "## Examples"
 nbText: """
 A very *minimal* Nim example:
 """
@@ -65,7 +64,33 @@ nbCodeSkip:
   wait() # Wait until the window gets closed
 
 nbText: """
-To view more complex examples please visit the 
+Using a local HTML file. Please note that you need to add 
+`<script src="/webui.js"></script>` to all your HTML files.
+"""
+
+nbCodeSkip:
+  import webui
+
+  let window = newWindow() 
+
+  # Please add <script src="/webui.js"></script> to your HTML files
+  window.show("index.html")
+  wait()
+
+nbText: """
+Using a specific web browser:
+"""
+
+nbCodeSkip: 
+  import webui
+
+  let window = newWindow()
+  window.show("<html>Hello</html>", BrowserChrome)
+
+  wait()
+
+nbText: """
+To view more complex and complete examples please visit the 
 [examples](https://github.com/neroist/webui/tree/main/examples) 
 directory in my GitHub repository.
 """
@@ -87,9 +112,13 @@ shown, the UI will get refreshed in the same window.
 """
 
 nbCodeSkip:
-  const html = "<html>Hello!</html>"
+  # Shows html in any installed web browser, using the embedded html
+  window.show("<html>Hello!</html>") 
 
-  window.show(html) # Shows html in any installed web browser
+nbCodeSkip:
+  # Show a window using a local html file
+  # Please add <script src="/webui.js"></script> to your HTML files
+  window.show("<html>Hello!</html>") 
 
 nbText: """
 To show a window in a specific web browser:
@@ -99,22 +128,22 @@ nbCodeSkip:
   const html = "<html>Hello!</html>"
 
   # Chrome
-  window.showBrowser(html, BrowserChrome) # you could also use showWindow
+  window.nbJsShowSource(html, BrowserChrome) # you could also use showWindow
 
   # Firefox
-  window.showBrowser(html, BrowserFirefox)
+  window.nbJsShowSource(html, BrowserFirefox)
 
   # Microsoft Edge
-  window.showBrowser(html, BrowserEdge)
+  window.show(html, BrowserEdge)
 
   # Chromium
-  window.showBrowser(html, BrowserChromium)
+  window.show(html, BrowserChromium)
 
   # Safari
-  window.showBrowser(html, BrowserSafari)
+  window.show(html, BrowserSafari)
 
   # Any available web browser
-  window.showBrowser(html, BrowserAny)
+  window.show(html, BrowserAny)
 
 nbText: """
 If you need to update the whole UI content, you can also use `show()`, which
@@ -137,16 +166,6 @@ nbCodeSkip:
   window.show(newHtml)
 
 nbSection: "### Window Status"
-nbText: """
-In some exceptional cases, you want to know if any opened window exists, 
-for that, please use `isAnyWindowRunning()`, which returns `true` or `false`.
-"""
-
-nbCodeSkip:
-  if isAnyWindowRunning():
-    echo "A window is running..."
-  else:
-    echo "No window is running."
 
 nbText: """
 To know if a specific window is running, you can use `shown()`.
@@ -158,7 +177,7 @@ nbCodeSkip:
   else:
     echo "No window is running."
 
-nbSection: "## Binding"
+nbSection: "## Binding & Events"
 nbSection: "### Bind"
 nbText: """
 Use `bind()` to receive click events when the user clicks on any HTML 
@@ -167,6 +186,7 @@ element with a specific ID, for example `<button id="MyID">Hello</button>`.
 
 nbCodeSkip:
   window.bind("MyID") do (e: Event):
+    # <button id="MyID">Hello</button> gets clicked!
     echo "Binding element ", e.elementName, "!"
 
 nbCapture:
@@ -179,24 +199,51 @@ back to the Javascript code for you.
 """
 
 nbCodeSkip:
-  window.bind("MyID") do (e: Event) -> bool:
-    return 1 + 2 == 3  # true
+  window.bind("MyID") do (e: Event) -> int:
+    return 1 + 2  # 3
 
 nbSection: "### Bind All"
 nbText: """
-You can also listen for events by binding an empty ID.
+You can also listen for all events by binding an empty ID.
 """
 
 nbCodeSkip:
   window.bind("") do (e: Event):
     echo "Listening for events..."
 
+nbSection: "### Events"
+nbText: """
+When you use `window.bind()`, your application will receive an event every 
+time the user clicks on the specified HTML element. The event comes with 
+the `elementName`, which is the HTML ID of the clicked element, for example, 
+`MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
+element ID & the unique window ID. Those two IDs are not generally needed.
+"""
+nbCodeSkip:
+  proc myProc(e: Event) =
+    echo "Hi!, You clicked on ", e.element, " element"
+
+nbText: """
+The `e` corresponds to `Event`, and it has these attributes:
+"""
+
+nbCodeSkip:
+  e.window       # The window the event occured on
+  e.eventType    # Event type
+  e.element      # HTML element ID
+  e.data         # JavaScript data/response
+
+nbText: """
+You can access other attributes like `eventNumber`, but those are
+used by WebUI, and are only meant for internal use by the library.
+"""
+
 nbSection: "## Application"
 nbSection: "### Wait"
 nbText: """
 It is essential to call `wait()` at the end of your main function, after 
 you create/show all your windows. This will make your application run 
-until the user closes all visible windows or when `exit()` is called.
+until the user closes all visible windows or when [`exit()`](#exit) is called.
 """
 
 nbCodeSkip:
@@ -212,7 +259,7 @@ nbCodeSkip:
 nbSection: "### Exit"
 nbText: """
 At any moment, you can call `exit()`, which tries to close all related
-opened windows and make `wait()` break.
+opened windows and make [`wait()`](#wait) break.
 """
 
 nbCodeSkip:
@@ -221,41 +268,33 @@ nbCodeSkip:
 nbSection: "### Close"
 nbText: """
 You can call `close()` to close a specific window, if there is no running 
-window left `wait()` will break.
+window left [`wait()`](#wait) will break.
 """
 
 nbCodeSkip:
   window.close()
 
-nbSection: "### App Status"
-nbText: """
-In some exceptional cases, like in the WebUI-TypeScript wrapper, you 
-want to know if the whole application still running or not. For that,
-please use `isAppRunning()`, which returns `true` or `false`.
-"""
-
-nbCodeSkip:
-  if isAppRunning():
-    echo "The application is still running"
-  else:
-    echo "The application is closed."
-
 nbSection: "### Startup Timeout"
 nbText: """
-WebUI waits a couple of seconds to let the web browser start and connect.
-You can control this behavior by using `setTimeout()`.
+WebUI waits a couple of seconds (*Default is 30 seconds*) to let the web
+browser start and connect. You can control this behavior by using 
+`setTimeout()`.
 """
 
 nbCodeSkip:
   # Wait 10 seconds for the web browser to start
   setTimeout(10)
-  wait()    # After 10 seconds, if the web browser
-            # did not start yet, this function will return
+
+  # Now, after 10 seconds, if the web browser
+  # did not start yet, wait() will break
+  wait()    
 
 nbCodeSkip:
   # Wait forever.
   setTimeout(0)
-  wait() # this function will never end
+
+  # wait() will never end
+  wait() 
 
 nbSection: "### Multi Access"
 
@@ -273,36 +312,8 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = true
 
-nbSection: "## Event"
-nbSection: "### Event"
-nbText: """
-When you use `window.bind()`, your application will receive an event every 
-time the user clicks on the specified HTML element. The event comes with 
-the `elementName`, which is the HTML ID of the clicked element, for example, 
-`MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
-element ID & the unique window ID. Those two IDs are not generally needed.
-"""
-nbCodeSkip:
-  proc myProc(e: Event) =
-    echo "Hi!, You clicked on ", e.elementName, " element"
-
-nbText: """
-The `e` corresponds to `Event`, and it has these attributes:
-"""
-
-nbCodeSkip:
-  e.windowId     # WebUI unique window ID
-  e.elementId    # WebUI unique element ID
-  e.elementName  # The HTML ID of the clicked element
-  e.window       # The current window object
-
-nbText: """
-You can access other attributes like `data` and `response`, but those are
-used by WebUI, and are only meant for internal use by the library.
-"""
-
-nbSection: "## Run JavaScript"
-nbSection: "### Script"
+nbSection: "## JavaScript"
+nbSection: "### Run JavaScript From Nim"
 nbText: """
 You can run JavaScript on any window to read values, update the view, or 
 anything else. In addition, you can check for execution errors, as well as 
@@ -310,90 +321,60 @@ receive data.
 """
 
 nbCodeSkip:
-  proc myProc(e: Event) = 
-    # window.script requires a `var` type
-    var js = newScript("alert('Hello');")
-
-    let jsResult = e.window.script(js)
-
-nbText: """
-or
-"""
-
-nbCodeSkip:
-  proc myProc(e: Event) = 
-    let jsResult = e.window.evalJs("alert('Hello');")
-  
-nbText: """
-An example of how to run a JavaScript and get back the output as string, 
-and check for errors, if any.
-"""
-
-nbCodeSkip:
-  proc myProc(e: Event) =
-    var js = newScript("var foo = 4; var bar = 2; return foo*bar;") # Return '8'
-
-    let res = e.window.script(js)
+  window.bind("ExampleElement") do (e: Event):
+    # Run JavaScript to get the password
+    let res = e.window.script("return 2*2;")
 
     # Check for any error
-    if res.error == true:
-        echo "JavaScript Error: ", res.data
+    if res.error:
+      echo "JavaScript Error: ", res.data
     else:
-        echo "Output: ", res.data # '8'
-  
-nbSection: "## Server"
-nbSection: "### Server"
+      echo "JavaScript Response: ", res.data # 4
+
+    # Run JavaScript quickly with no waiting for the response
+    e.window.run("alert('Fast!')")
+
+nbSection: "### Run Nim From JavaScript"
 nbText: """
-You can use WebUI to serve a folder, which makes WebUI act like a web 
-server. To do that, please use `newServer()`, which returns the complete 
-URL of the server.
+To call a Nim function from JavaScript and get the result back please
+use `webui_fn('MyID', 'My Data').then((response) => { ... });`. If the
+function does not have a response then it's safe to remove the then
+method like this `webui_fn('MyID_NoResponse', 'My Data');`.
 """
 
 nbCodeSkip:
-  # Serve a folder
-  let url = window.newServer("/path/to/folder")
+  window.bind("ExampleElement2") do (e: Event) -> string:
+    echo "Data from JavaScript: ", e.data # Message from JS
 
-nbCodeSkip:
-  # Automatically serve the current directory
-  let url = window.newServer()
+    return "Message from Nim"
 
-nbText: """  
-When you serve a folder, you probably want to run JavaScript & TypeScript 
-files and show the output in the UI. To do that, you can use 
-`scriptRuntime=`, which makes WebUI act like Nodejs.
-"""
+nbText: """
+JavaScript:
 
-nbCodeSkip:
-  # Choose your preferable runtime for .js & .ts files
-  # Deno: RuntimeDeno
-  # Node.js: RuntimeNodeJs
-
-  # Deno
-  window.scriptRuntime = RuntimeDeno
-
-  # Nodejs
-  window.scriptRuntime = RuntimeNodeJs
-
-  # Disable
-  window.scriptRuntime = RuntimeNone
-
-nbText: """  
-If you already have a URL, you can use WebUI to open a window using the
-URL. For that, please use `open()`.
-"""
-
-nbCodeSkip:
-  setTimeout(0) # (Optional) Let the server run forever
-  window.open(url, BrowserChrome) # `url` can also be a Uri from std/uri
-
-nbText: """  
-In addition, it can make WebUI track clicks and send you events by 
-embedding the WebUI JavaScript bridge file `webui.js`. Of course, this 
-will work only if the server is WebUI.
-
-```html
-<script src="/webui.js"></script>
+```js
+webui_fn('MyID', 'Message from JS').then((response) => {
+    console.log(response); // Message from Nim
+});
 ```
 """
 
+nbSection: "### TypeScript Runtimes"
+nbText: """
+You may want to interpret JavaScript & TypeScript files and show the output
+in the UI. You can use `runtime=` and choose between Deno or Nodejs as
+your runtimes.
+"""
+
+nbCodeSkip: 
+  # Deno
+  window.runtime = Deno
+  window.show("my_file.ts")
+
+  # Nodejs
+  window.runtime = NodeJS
+  window.show("my_file.js")
+
+  # Disable
+  window.runtime = None
+ 
 nbSave

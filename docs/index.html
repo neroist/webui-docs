@@ -50,8 +50,8 @@ pre > code {
 <h1>WebUI Wrapper for Nim</h1>
 <h2>Table of Contents:</h2>
 <ul>
-<li><a href="#get-started">Get Started</a></li>
-<li><a href="#example">Example</a></li>
+<li><a href="#download-and-install">Download And Install</a></li>
+<li><a href="#examples">Examples</a></li>
 <li><a href="#windows">Windows</a>
 <ul>
 <li><a href="#new-window">New Window</a></li>
@@ -59,10 +59,11 @@ pre > code {
 <li><a href="#window-status">Window Status</a></li>
 </ul>
 </li>
-<li><a href="#binding">Binding</a>
+<li><a href="#binding-&-events">Binding &amp; Events</a>
 <ul>
 <li><a href="#bind">Bind</a></li>
 <li><a href="#bind-all">Bind All</a></li>
+<li><a href="#events">Events</a></li>
 </ul>
 </li>
 <li><a href="#application">Application</a>
@@ -70,39 +71,29 @@ pre > code {
 <li><a href="#wait">Wait</a></li>
 <li><a href="#exit">Exit</a></li>
 <li><a href="#close">Close</a></li>
-<li><a href="#app-status">App Status</a></li>
 <li><a href="#startup-timeout">Startup Timeout</a></li>
 <li><a href="#multi-access">Multi Access</a></li>
 </ul>
 </li>
-<li><a href="#event">Event</a>
+<li><a href="#javascript">JavaScript</a>
 <ul>
-<li><a href="#event-1">Event</a></li>
-</ul>
-</li>
-<li><a href="#run-javascript">Run JavaScript</a>
-<ul>
-<li><a href="#script">Script</a></li>
-</ul>
-</li>
-<li><a href="#server">Server</a>
-<ul>
-<li><a href="#server-1">Server</a></li>
+<li><a href="#run-javascript-from-nim">Run JavaScript From Nim</a></li>
+<li><a href="#run-nim-from-javascript">Run Nim From JavaScript</a></li>
+<li><a href="#typescript-runtimes">TypeScript Runtimes</a></li>
 </ul>
 </li>
 </ul>
-<p><a name="get-started"></a></p>
-<h2>Get Started</h2>
+<p><a name="download-and-install"></a></p>
+<h2>Download And Install</h2>
 <hr />
-<p>To begin you need to install the <code>webui</code> library for Nim. This installs
-WebUI's C sources for you.</p>
+<p>Install the WebUI library from Nimble</p>
 <pre><code class="language-shell">nimble install webui
 </code></pre>
 <p>To see the wrapper's source code, please visit the GitHub repository here:
 <a href="https://github.com/neroist/webui">https://github.com/neroist/webui</a></p>
 <p>WebUI's source code is <a href="https://github.com/alifcommunity/webui">here</a>.</p>
-<p><a name="example"></a></p>
-<h2>Example</h2>
+<p><a name="examples"></a></p>
+<h2>Examples</h2>
 <hr />
 <p>A very <em>minimal</em> Nim example:</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> webui
@@ -111,7 +102,23 @@ WebUI's C sources for you.</p>
 window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>) <span class="hljs-comment"># Show the window with html content</span>
 
 wait() <span class="hljs-comment"># Wait until the window gets closed</span></pre>
-<p>To view more complex examples please visit the
+<p>Using a local HTML file. Please note that you need to add
+<code>&lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt;</code> to all your HTML files.</p>
+<pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> webui
+
+<span class="hljs-keyword">let</span> window = newWindow() 
+
+<span class="hljs-comment"># Please add &lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt; to your HTML files</span>
+window.show(<span class="hljs-string">&quot;index.html&quot;</span>)
+wait()</pre>
+<p>Using a specific web browser:</p>
+<pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> webui
+
+<span class="hljs-keyword">let</span> window = newWindow()
+window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>, <span class="hljs-type">BrowserChrome</span>)
+
+wait()</pre>
+<p>To view more complex and complete examples please visit the
 <a href="https://github.com/neroist/webui/tree/main/examples">examples</a>
 directory in my GitHub repository.</p>
 <p><a name="windows"></a></p>
@@ -128,29 +135,31 @@ new window object.</p>
 <hr />
 <p>To show a window, you can use the <code>show()</code> function. If the window is already
 shown, the UI will get refreshed in the same window.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
-
-window.show(html) <span class="hljs-comment"># Shows html in any installed web browser</span></pre>
+<pre class="nohighlight hljs nim"><span class="hljs-comment"># Shows html in any installed web browser, using the embedded html</span>
+window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>)</pre>
+<pre class="nohighlight hljs nim"><span class="hljs-comment"># Show a window using a local html file</span>
+<span class="hljs-comment"># Please add &lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt; to your HTML files</span>
+window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>)</pre>
 <p>To show a window in a specific web browser:</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
 <span class="hljs-comment"># Chrome</span>
-window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
+window.nbJsShowSource(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
 
 <span class="hljs-comment"># Firefox</span>
-window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
+window.nbJsShowSource(html, <span class="hljs-type">BrowserFirefox</span>)
 
 <span class="hljs-comment"># Microsoft Edge</span>
-window.showBrowser(html, <span class="hljs-type">BrowserEdge</span>)
+window.show(html, <span class="hljs-type">BrowserEdge</span>)
 
 <span class="hljs-comment"># Chromium</span>
-window.showBrowser(html, <span class="hljs-type">BrowserChromium</span>)
+window.show(html, <span class="hljs-type">BrowserChromium</span>)
 
 <span class="hljs-comment"># Safari</span>
-window.showBrowser(html, <span class="hljs-type">BrowserSafari</span>)
+window.show(html, <span class="hljs-type">BrowserSafari</span>)
 
 <span class="hljs-comment"># Any available web browser</span>
-window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)</pre>
+window.show(html, <span class="hljs-type">BrowserAny</span>)</pre>
 <p>If you need to update the whole UI content, you can also use <code>show()</code>, which
 allows you to refresh the window UI with any new HTML content.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">import</span> std/os
@@ -169,19 +178,13 @@ window.show(newHtml)</pre>
 <p><a name="window-status"></a></p>
 <h3>Window Status</h3>
 <hr />
-<p>In some exceptional cases, you want to know if any opened window exists,
-for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true</code> or <code>false</code>.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">if</span> isAnyWindowRunning():
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;A window is running...&quot;</span>
-<span class="hljs-keyword">else</span>:
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span></pre>
 <p>To know if a specific window is running, you can use <code>shown()</code>.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">if</span> window.shown():
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;A window is running...&quot;</span>
 <span class="hljs-keyword">else</span>:
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span></pre>
-<p><a name="binding"></a></p>
-<h2>Binding</h2>
+<p><a name="binding-&-events"></a></p>
+<h2>Binding &amp; Events</h2>
 <hr />
 <p><a name="bind"></a></p>
 <h3>Bind</h3>
@@ -189,19 +192,37 @@ for that, please use <code>isAnyWindowRunning()</code>, which returns <code>true
 <p>Use <code>bind()</code> to receive click events when the user clicks on any HTML
 element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt;</code>.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+  <span class="hljs-comment"># &lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt; gets clicked!</span>
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.elementName, <span class="hljs-string">&quot;!&quot;</span></pre>
 <pre class="nb-output">Binding element MyID!</pre>
 <p>You can also have a return value on your function, it must be either of
 <code>string</code>, <code>int</code>, or <code>bool</code>. The return value will be automatically passed
 back to the Javascript code for you.</p>
-<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">bool</span>:
-  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span></pre>
+<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">int</span>:
+  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span>  <span class="hljs-comment"># 3</span></pre>
 <p><a name="bind-all"></a></p>
 <h3>Bind All</h3>
 <hr />
-<p>You can also listen for events by binding an empty ID.</p>
+<p>You can also listen for all events by binding an empty ID.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span></pre>
+<p><a name="events"></a></p>
+<h3>Events</h3>
+<hr />
+<p>When you use <code>window.bind()</code>, your application will receive an event every
+time the user clicks on the specified HTML element. The event comes with
+the <code>elementName</code>, which is the HTML ID of the clicked element, for example,
+<code>MyButton</code>, <code>MyInput</code>, etc. The event also comes with the WebUI unique
+element ID &amp; the unique window ID. Those two IDs are not generally needed.</p>
+<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
+  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.element, <span class="hljs-string">&quot; element&quot;</span></pre>
+<p>The <code>e</code> corresponds to <code>Event</code>, and it has these attributes:</p>
+<pre class="nohighlight hljs nim">e.window       <span class="hljs-comment"># The window the event occured on</span>
+e.eventType    <span class="hljs-comment"># Event type</span>
+e.element      <span class="hljs-comment"># HTML element ID</span>
+e.data         <span class="hljs-comment"># JavaScript data/response</span></pre>
+<p>You can access other attributes like <code>eventNumber</code>, but those are
+used by WebUI, and are only meant for internal use by the library.</p>
 <p><a name="application"></a></p>
 <h2>Application</h2>
 <hr />
@@ -210,7 +231,7 @@ back to the Javascript code for you.</p>
 <hr />
 <p>It is essential to call <code>wait()</code> at the end of your main function, after
 you create/show all your windows. This will make your application run
-until the user closes all visible windows or when <code>exit()</code> is called.</p>
+until the user closes all visible windows or when <a href="#exit"><code>exit()</code></a> is called.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Create windows...</span>
 <span class="hljs-comment"># Bind HTML elements...</span>
 <span class="hljs-comment"># Show the windows...</span>
@@ -223,36 +244,31 @@ wait()</pre>
 <h3>Exit</h3>
 <hr />
 <p>At any moment, you can call <code>exit()</code>, which tries to close all related
-opened windows and make <code>wait()</code> break.</p>
+opened windows and make <a href="#wait"><code>wait()</code></a> break.</p>
 <pre class="nohighlight hljs nim">exit()</pre>
 <p><a name="close"></a></p>
 <h3>Close</h3>
 <hr />
 <p>You can call <code>close()</code> to close a specific window, if there is no running
-window left <code>wait()</code> will break.</p>
+window left <a href="#wait"><code>wait()</code></a> will break.</p>
 <pre class="nohighlight hljs nim">window.close()</pre>
-<p><a name="app-status"></a></p>
-<h3>App Status</h3>
-<hr />
-<p>In some exceptional cases, like in the WebUI-TypeScript wrapper, you
-want to know if the whole application still running or not. For that,
-please use <code>isAppRunning()</code>, which returns <code>true</code> or <code>false</code>.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">if</span> isAppRunning():
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is still running&quot;</span>
-<span class="hljs-keyword">else</span>:
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is closed.&quot;</span></pre>
 <p><a name="startup-timeout"></a></p>
 <h3>Startup Timeout</h3>
 <hr />
-<p>WebUI waits a couple of seconds to let the web browser start and connect.
-You can control this behavior by using <code>setTimeout()</code>.</p>
+<p>WebUI waits a couple of seconds (<em>Default is 30 seconds</em>) to let the web
+browser start and connect. You can control this behavior by using
+<code>setTimeout()</code>.</p>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Wait 10 seconds for the web browser to start</span>
 setTimeout(<span class="hljs-number">10</span>)
-wait()    <span class="hljs-comment"># After 10 seconds, if the web browser</span>
-          <span class="hljs-comment"># did not start yet, this function will return</span></pre>
+
+<span class="hljs-comment"># Now, after 10 seconds, if the web browser</span>
+<span class="hljs-comment"># did not start yet, wait() will break</span>
+wait()</pre>
 <pre class="nohighlight hljs nim"><span class="hljs-comment"># Wait forever.</span>
 setTimeout(<span class="hljs-number">0</span>)
-wait() <span class="hljs-comment"># this function will never end</span></pre>
+
+<span class="hljs-comment"># wait() will never end</span>
+wait()</pre>
 <p><a name="multi-access"></a></p>
 <h3>Multi Access</h3>
 <hr />
@@ -264,92 +280,59 @@ wait() <span class="hljs-comment"># this function will never end</span></pre>
 if someone else tries to access the URL, WebUI will show an error. To allow
 multi-user access to the same URL, you can use <code>multiAccess=</code>.</p>
 <pre class="nohighlight hljs nim">window.multiAccess = <span class="hljs-literal">true</span></pre>
-<p><a name="event"></a></p>
-<h2>Event</h2>
+<p><a name="javascript"></a></p>
+<h2>JavaScript</h2>
 <hr />
-<p><a name="event-1"></a></p>
-<h3>Event</h3>
-<hr />
-<p>When you use <code>window.bind()</code>, your application will receive an event every
-time the user clicks on the specified HTML element. The event comes with
-the <code>elementName</code>, which is the HTML ID of the clicked element, for example,
-<code>MyButton</code>, <code>MyInput</code>, etc. The event also comes with the WebUI unique
-element ID &amp; the unique window ID. Those two IDs are not generally needed.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.elementName, <span class="hljs-string">&quot; element&quot;</span></pre>
-<p>The <code>e</code> corresponds to <code>Event</code>, and it has these attributes:</p>
-<pre class="nohighlight hljs nim">e.windowId     <span class="hljs-comment"># WebUI unique window ID</span>
-e.elementId    <span class="hljs-comment"># WebUI unique element ID</span>
-e.elementName  <span class="hljs-comment"># The HTML ID of the clicked element</span>
-e.window       <span class="hljs-comment"># The current window object</span></pre>
-<p>You can access other attributes like <code>data</code> and <code>response</code>, but those are
-used by WebUI, and are only meant for internal use by the library.</p>
-<p><a name="run-javascript"></a></p>
-<h2>Run JavaScript</h2>
-<hr />
-<p><a name="script"></a></p>
-<h3>Script</h3>
+<p><a name="run-javascript-from-nim"></a></p>
+<h3>Run JavaScript From Nim</h3>
 <hr />
 <p>You can run JavaScript on any window to read values, update the view, or
 anything else. In addition, you can check for execution errors, as well as
 receive data.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) = 
-  <span class="hljs-comment"># window.script requires a `var` type</span>
-  <span class="hljs-keyword">var</span> js = newScript(<span class="hljs-string">&quot;alert('Hello');&quot;</span>)
-
-  <span class="hljs-keyword">let</span> jsResult = e.window.script(js)</pre>
-<p>or</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) = 
-  <span class="hljs-keyword">let</span> jsResult = e.window.evalJs(<span class="hljs-string">&quot;alert('Hello');&quot;</span>)</pre>
-<p>An example of how to run a JavaScript and get back the output as string,
-and check for errors, if any.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
-  <span class="hljs-keyword">var</span> js = newScript(<span class="hljs-string">&quot;var foo = 4; var bar = 2; return foo*bar;&quot;</span>) <span class="hljs-comment"># Return '8'</span>
-
-  <span class="hljs-keyword">let</span> res = e.window.script(js)
+<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;ExampleElement&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+  <span class="hljs-comment"># Run JavaScript to get the password</span>
+  <span class="hljs-keyword">let</span> res = e.window.script(<span class="hljs-string">&quot;return 2*2;&quot;</span>)
 
   <span class="hljs-comment"># Check for any error</span>
-  <span class="hljs-keyword">if</span> res.error == <span class="hljs-literal">true</span>:
-      <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
+  <span class="hljs-keyword">if</span> res.error:
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
   <span class="hljs-keyword">else</span>:
-      <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span></pre>
-<p><a name="server"></a></p>
-<h2>Server</h2>
-<hr />
-<p><a name="server-1"></a></p>
-<h3>Server</h3>
-<hr />
-<p>You can use WebUI to serve a folder, which makes WebUI act like a web
-server. To do that, please use <code>newServer()</code>, which returns the complete
-URL of the server.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-comment"># Serve a folder</span>
-<span class="hljs-keyword">let</span> url = window.newServer(<span class="hljs-string">&quot;/path/to/folder&quot;</span>)</pre>
-<pre class="nohighlight hljs nim"><span class="hljs-comment"># Automatically serve the current directory</span>
-<span class="hljs-keyword">let</span> url = window.newServer()</pre>
-<p>When you serve a folder, you probably want to run JavaScript &amp; TypeScript
-files and show the output in the UI. To do that, you can use
-<code>scriptRuntime=</code>, which makes WebUI act like Nodejs.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-comment"># Choose your preferable runtime for .js &amp; .ts files</span>
-<span class="hljs-comment"># Deno: RuntimeDeno</span>
-<span class="hljs-comment"># Node.js: RuntimeNodeJs</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Response: &quot;</span>, res.data <span class="hljs-comment"># 4</span>
 
-<span class="hljs-comment"># Deno</span>
-window.scriptRuntime = <span class="hljs-type">RuntimeDeno</span>
+  <span class="hljs-comment"># Run JavaScript quickly with no waiting for the response</span>
+  e.window.run(<span class="hljs-string">&quot;alert('Fast!')&quot;</span>)</pre>
+<p><a name="run-nim-from-javascript"></a></p>
+<h3>Run Nim From JavaScript</h3>
+<hr />
+<p>To call a Python function from JavaScript and get the result back please
+use <code>webui_fn('MyID', 'My Data').then((response) =&gt; { ... });</code>. If the
+function does not have a response then it's safe to remove the then
+method like this <code>webui_fn('MyID_NoResponse', 'My Data');</code>.</p>
+<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;ExampleElement2&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">string</span>:
+  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Data from JavaScript: &quot;</span>, e.data <span class="hljs-comment"># Message from JS</span>
+
+  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Message from Nim&quot;</span></pre>
+<p>JavaScript:</p>
+<pre><code class="language-js">webui_fn('MyID', 'Message from JS').then((response) =&gt; {
+    console.log(response); // &quot;Message from Python
+});
+</code></pre>
+<p><a name="typescript-runtimes"></a></p>
+<h3>TypeScript Runtimes</h3>
+<hr />
+<p>You may want to interpret JavaScript &amp; TypeScript files and show the output
+in the UI. You can use <code>runtime=</code> and choose between Deno or Nodejs as
+your runtimes.</p>
+<pre class="nohighlight hljs nim"><span class="hljs-comment"># Deno</span>
+window.runtime = <span class="hljs-type">Deno</span>
+window.show(<span class="hljs-string">&quot;my_file.ts&quot;</span>)
 
 <span class="hljs-comment"># Nodejs</span>
-window.scriptRuntime = <span class="hljs-type">RuntimeNodeJs</span>
+window.runtime = <span class="hljs-type">NodeJS</span>
+window.show(<span class="hljs-string">&quot;my_file.js&quot;</span>)
 
 <span class="hljs-comment"># Disable</span>
-window.scriptRuntime = <span class="hljs-type">RuntimeNone</span></pre>
-<p>If you already have a URL, you can use WebUI to open a window using the
-URL. For that, please use <code>open()</code>.</p>
-<pre class="nohighlight hljs nim">setTimeout(<span class="hljs-number">0</span>) <span class="hljs-comment"># (Optional) Let the server run forever</span>
-window.open(url, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># `url` can also be a Uri from std/uri</span></pre>
-<p>In addition, it can make WebUI track clicks and send you events by
-embedding the WebUI JavaScript bridge file <code>webui.js</code>. Of course, this
-will work only if the server is WebUI.</p>
-<pre><code class="language-html">&lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt;
-</code></pre>
+window.scriptRuntime = <span class="hljs-type">None</span></pre>
 </main>
 <footer>
 <div class="nb-box">
@@ -397,10 +380,9 @@ nbText: <span class="hljs-string">&quot;&quot;&quot;
 
 addToc()
 
-nbSection: <span class="hljs-string">&quot;## Get Started&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Download And Install&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-To begin you need to install the `webui` library for Nim. This installs
-WebUI's C sources for you.
+Install the WebUI library from Nimble
 
 ```shell
 nimble install webui
@@ -412,7 +394,7 @@ To see the wrapper's source code, please visit the GitHub repository here:
 WebUI's source code is [here](https://github.com/alifcommunity/webui).
 &quot;&quot;&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;## Example&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Examples&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 A very *minimal* Nim example:
 &quot;&quot;&quot;</span>
@@ -426,7 +408,33 @@ nbCodeSkip:
   wait() <span class="hljs-comment"># Wait until the window gets closed</span>
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-To view more complex examples please visit the 
+Using a local HTML file. Please note that you need to add 
+`&lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt;` to all your HTML files.
+&quot;&quot;&quot;</span>
+
+nbCodeSkip:
+  <span class="hljs-keyword">import</span> webui
+
+  <span class="hljs-keyword">let</span> window = newWindow() 
+
+  <span class="hljs-comment"># Please add &lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt; to your HTML files</span>
+  window.show(<span class="hljs-string">&quot;index.html&quot;</span>)
+  wait()
+
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+Using a specific web browser:
+&quot;&quot;&quot;</span>
+
+nbCodeSkip: 
+  <span class="hljs-keyword">import</span> webui
+
+  <span class="hljs-keyword">let</span> window = newWindow()
+  window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello&lt;/html&gt;&quot;</span>, <span class="hljs-type">BrowserChrome</span>)
+
+  wait()
+
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+To view more complex and complete examples please visit the 
 [examples](https://github.com/neroist/webui/tree/main/examples) 
 directory in my GitHub repository.
 &quot;&quot;&quot;</span>
@@ -448,9 +456,13 @@ shown, the UI will get refreshed in the same window.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
-  <span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
+  <span class="hljs-comment"># Shows html in any installed web browser, using the embedded html</span>
+  window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>) 
 
-  window.show(html) <span class="hljs-comment"># Shows html in any installed web browser</span>
+nbCodeSkip:
+  <span class="hljs-comment"># Show a window using a local html file</span>
+  <span class="hljs-comment"># Please add &lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt; to your HTML files</span>
+  window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>) 
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 To show a window in a specific web browser:
@@ -460,22 +472,22 @@ nbCodeSkip:
   <span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
   <span class="hljs-comment"># Chrome</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
+  window.nbJsShowSource(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
 
   <span class="hljs-comment"># Firefox</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserFirefox</span>)
+  window.nbJsShowSource(html, <span class="hljs-type">BrowserFirefox</span>)
 
   <span class="hljs-comment"># Microsoft Edge</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserEdge</span>)
+  window.show(html, <span class="hljs-type">BrowserEdge</span>)
 
   <span class="hljs-comment"># Chromium</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserChromium</span>)
+  window.show(html, <span class="hljs-type">BrowserChromium</span>)
 
   <span class="hljs-comment"># Safari</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserSafari</span>)
+  window.show(html, <span class="hljs-type">BrowserSafari</span>)
 
   <span class="hljs-comment"># Any available web browser</span>
-  window.showBrowser(html, <span class="hljs-type">BrowserAny</span>)
+  window.show(html, <span class="hljs-type">BrowserAny</span>)
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 If you need to update the whole UI content, you can also use `show()`, which
@@ -498,16 +510,6 @@ nbCodeSkip:
   window.show(newHtml)
 
 nbSection: <span class="hljs-string">&quot;### Window Status&quot;</span>
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-In some exceptional cases, you want to know if any opened window exists, 
-for that, please use `isAnyWindowRunning()`, which returns `true` or `false`.
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  <span class="hljs-keyword">if</span> isAnyWindowRunning():
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;A window is running...&quot;</span>
-  <span class="hljs-keyword">else</span>:
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span>
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 To know if a specific window is running, you can use `shown()`.
@@ -519,7 +521,7 @@ nbCodeSkip:
   <span class="hljs-keyword">else</span>:
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;No window is running.&quot;</span>
 
-nbSection: <span class="hljs-string">&quot;## Binding&quot;</span>
+nbSection: <span class="hljs-string">&quot;## Binding &amp; Events&quot;</span>
 nbSection: <span class="hljs-string">&quot;### Bind&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 Use `bind()` to receive click events when the user clicks on any HTML 
@@ -528,6 +530,7 @@ element with a specific ID, for example `&lt;button id=&quot;MyID&quot;&gt;Hello
 
 nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+    <span class="hljs-comment"># &lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt; gets clicked!</span>
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.elementName, <span class="hljs-string">&quot;!&quot;</span>
 
 nbCapture:
@@ -540,24 +543,51 @@ back to the Javascript code for you.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
-  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">bool</span>:
-    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span> == <span class="hljs-number">3</span>  <span class="hljs-comment"># true</span>
+  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">int</span>:
+    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span> + <span class="hljs-number">2</span>  <span class="hljs-comment"># 3</span>
 
 nbSection: <span class="hljs-string">&quot;### Bind All&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-You can also listen for events by binding an empty ID.
+You can also listen for all events by binding an empty ID.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Listening for events...&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;### Events&quot;</span>
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+When you use `window.bind()`, your application will receive an event every 
+time the user clicks on the specified HTML element. The event comes with 
+the `elementName`, which is the HTML ID of the clicked element, for example, 
+`MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
+element ID &amp; the unique window ID. Those two IDs are not generally needed.
+&quot;&quot;&quot;</span>
+nbCodeSkip:
+  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.element, <span class="hljs-string">&quot; element&quot;</span>
+
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+The `e` corresponds to `Event`, and it has these attributes:
+&quot;&quot;&quot;</span>
+
+nbCodeSkip:
+  e.window       <span class="hljs-comment"># The window the event occured on</span>
+  e.eventType    <span class="hljs-comment"># Event type</span>
+  e.element      <span class="hljs-comment"># HTML element ID</span>
+  e.data         <span class="hljs-comment"># JavaScript data/response</span>
+
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+You can access other attributes like `eventNumber`, but those are
+used by WebUI, and are only meant for internal use by the library.
+&quot;&quot;&quot;</span>
+
 nbSection: <span class="hljs-string">&quot;## Application&quot;</span>
 nbSection: <span class="hljs-string">&quot;### Wait&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 It is essential to call `wait()` at the end of your main function, after 
 you create/show all your windows. This will make your application run 
-until the user closes all visible windows or when `exit()` is called.
+until the user closes all visible windows or when [`exit()`](#exit) is called.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
@@ -573,7 +603,7 @@ nbCodeSkip:
 nbSection: <span class="hljs-string">&quot;### Exit&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 At any moment, you can call `exit()`, which tries to close all related
-opened windows and make `wait()` break.
+opened windows and make [`wait()`](#wait) break.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
@@ -582,41 +612,33 @@ nbCodeSkip:
 nbSection: <span class="hljs-string">&quot;### Close&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 You can call `close()` to close a specific window, if there is no running 
-window left `wait()` will break.
+window left [`wait()`](#wait) will break.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
   window.close()
 
-nbSection: <span class="hljs-string">&quot;### App Status&quot;</span>
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-In some exceptional cases, like in the WebUI-TypeScript wrapper, you 
-want to know if the whole application still running or not. For that,
-please use `isAppRunning()`, which returns `true` or `false`.
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  <span class="hljs-keyword">if</span> isAppRunning():
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is still running&quot;</span>
-  <span class="hljs-keyword">else</span>:
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;The application is closed.&quot;</span>
-
 nbSection: <span class="hljs-string">&quot;### Startup Timeout&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-WebUI waits a couple of seconds to let the web browser start and connect.
-You can control this behavior by using `setTimeout()`.
+WebUI waits a couple of seconds (*Default is 30 seconds*) to let the web
+browser start and connect. You can control this behavior by using 
+`setTimeout()`.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
   <span class="hljs-comment"># Wait 10 seconds for the web browser to start</span>
   setTimeout(<span class="hljs-number">10</span>)
-  wait()    <span class="hljs-comment"># After 10 seconds, if the web browser</span>
-            <span class="hljs-comment"># did not start yet, this function will return</span>
+
+  <span class="hljs-comment"># Now, after 10 seconds, if the web browser</span>
+  <span class="hljs-comment"># did not start yet, wait() will break</span>
+  wait()    
 
 nbCodeSkip:
   <span class="hljs-comment"># Wait forever.</span>
   setTimeout(<span class="hljs-number">0</span>)
-  wait() <span class="hljs-comment"># this function will never end</span>
+
+  <span class="hljs-comment"># wait() will never end</span>
+  wait() 
 
 nbSection: <span class="hljs-string">&quot;### Multi Access&quot;</span>
 
@@ -634,36 +656,8 @@ multi-user access to the same URL, you can use `multiAccess=`.
 nbCodeSkip:
   window.multiAccess = <span class="hljs-literal">true</span>
 
-nbSection: <span class="hljs-string">&quot;## Event&quot;</span>
-nbSection: <span class="hljs-string">&quot;### Event&quot;</span>
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-When you use `window.bind()`, your application will receive an event every 
-time the user clicks on the specified HTML element. The event comes with 
-the `elementName`, which is the HTML ID of the clicked element, for example, 
-`MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
-element ID &amp; the unique window ID. Those two IDs are not generally needed.
-&quot;&quot;&quot;</span>
-nbCodeSkip:
-  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.elementName, <span class="hljs-string">&quot; element&quot;</span>
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-The `e` corresponds to `Event`, and it has these attributes:
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  e.windowId     <span class="hljs-comment"># WebUI unique window ID</span>
-  e.elementId    <span class="hljs-comment"># WebUI unique element ID</span>
-  e.elementName  <span class="hljs-comment"># The HTML ID of the clicked element</span>
-  e.window       <span class="hljs-comment"># The current window object</span>
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-You can access other attributes like `data` and `response`, but those are
-used by WebUI, and are only meant for internal use by the library.
-&quot;&quot;&quot;</span>
-
-nbSection: <span class="hljs-string">&quot;## Run JavaScript&quot;</span>
-nbSection: <span class="hljs-string">&quot;### Script&quot;</span>
+nbSection: <span class="hljs-string">&quot;## JavaScript&quot;</span>
+nbSection: <span class="hljs-string">&quot;### Run JavaScript From Nim&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 You can run JavaScript on any window to read values, update the view, or 
 anything else. In addition, you can check for execution errors, as well as 
@@ -671,92 +665,62 @@ receive data.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
-  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) = 
-    <span class="hljs-comment"># window.script requires a `var` type</span>
-    <span class="hljs-keyword">var</span> js = newScript(<span class="hljs-string">&quot;alert('Hello');&quot;</span>)
-
-    <span class="hljs-keyword">let</span> jsResult = e.window.script(js)
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-or
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) = 
-    <span class="hljs-keyword">let</span> jsResult = e.window.evalJs(<span class="hljs-string">&quot;alert('Hello');&quot;</span>)
-  
-nbText: <span class="hljs-string">&quot;&quot;&quot;
-An example of how to run a JavaScript and get back the output as string, 
-and check for errors, if any.
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
-    <span class="hljs-keyword">var</span> js = newScript(<span class="hljs-string">&quot;var foo = 4; var bar = 2; return foo*bar;&quot;</span>) <span class="hljs-comment"># Return '8'</span>
-
-    <span class="hljs-keyword">let</span> res = e.window.script(js)
+  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;ExampleElement&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
+    <span class="hljs-comment"># Run JavaScript to get the password</span>
+    <span class="hljs-keyword">let</span> res = e.window.script(<span class="hljs-string">&quot;return 2*2;&quot;</span>)
 
     <span class="hljs-comment"># Check for any error</span>
-    <span class="hljs-keyword">if</span> res.error == <span class="hljs-literal">true</span>:
-        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
+    <span class="hljs-keyword">if</span> res.error:
+      <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Error: &quot;</span>, res.data
     <span class="hljs-keyword">else</span>:
-        <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Output: &quot;</span>, res.data <span class="hljs-comment"># '8'</span>
-  
-nbSection: <span class="hljs-string">&quot;## Server&quot;</span>
-nbSection: <span class="hljs-string">&quot;### Server&quot;</span>
+      <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;JavaScript Response: &quot;</span>, res.data <span class="hljs-comment"># 4</span>
+
+    <span class="hljs-comment"># Run JavaScript quickly with no waiting for the response</span>
+    e.window.run(<span class="hljs-string">&quot;alert('Fast!')&quot;</span>)
+
+nbSection: <span class="hljs-string">&quot;### Run Nim From JavaScript&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
-You can use WebUI to serve a folder, which makes WebUI act like a web 
-server. To do that, please use `newServer()`, which returns the complete 
-URL of the server.
+To call a Python function from JavaScript and get the result back please
+use `webui_fn('MyID', 'My Data').then((response) =&gt; { ... });`. If the
+function does not have a response then it's safe to remove the then
+method like this `webui_fn('MyID_NoResponse', 'My Data');`.
 &quot;&quot;&quot;</span>
 
 nbCodeSkip:
-  <span class="hljs-comment"># Serve a folder</span>
-  <span class="hljs-keyword">let</span> url = window.newServer(<span class="hljs-string">&quot;/path/to/folder&quot;</span>)
+  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;ExampleElement2&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>) -&gt; <span class="hljs-built_in">string</span>:
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Data from JavaScript: &quot;</span>, e.data <span class="hljs-comment"># Message from JS</span>
 
-nbCodeSkip:
-  <span class="hljs-comment"># Automatically serve the current directory</span>
-  <span class="hljs-keyword">let</span> url = window.newServer()
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Message from Nim&quot;</span>
 
-nbText: <span class="hljs-string">&quot;&quot;&quot;  
-When you serve a folder, you probably want to run JavaScript &amp; TypeScript 
-files and show the output in the UI. To do that, you can use 
-`scriptRuntime=`, which makes WebUI act like Nodejs.
-&quot;&quot;&quot;</span>
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+JavaScript:
 
-nbCodeSkip:
-  <span class="hljs-comment"># Choose your preferable runtime for .js &amp; .ts files</span>
-  <span class="hljs-comment"># Deno: RuntimeDeno</span>
-  <span class="hljs-comment"># Node.js: RuntimeNodeJs</span>
-
-  <span class="hljs-comment"># Deno</span>
-  window.scriptRuntime = <span class="hljs-type">RuntimeDeno</span>
-
-  <span class="hljs-comment"># Nodejs</span>
-  window.scriptRuntime = <span class="hljs-type">RuntimeNodeJs</span>
-
-  <span class="hljs-comment"># Disable</span>
-  window.scriptRuntime = <span class="hljs-type">RuntimeNone</span>
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;  
-If you already have a URL, you can use WebUI to open a window using the
-URL. For that, please use `open()`.
-&quot;&quot;&quot;</span>
-
-nbCodeSkip:
-  setTimeout(<span class="hljs-number">0</span>) <span class="hljs-comment"># (Optional) Let the server run forever</span>
-  window.open(url, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># `url` can also be a Uri from std/uri</span>
-
-nbText: <span class="hljs-string">&quot;&quot;&quot;  
-In addition, it can make WebUI track clicks and send you events by 
-embedding the WebUI JavaScript bridge file `webui.js`. Of course, this 
-will work only if the server is WebUI.
-
-```html
-&lt;script src=&quot;/webui.js&quot;&gt;&lt;/script&gt;
+```js
+webui_fn('MyID', 'Message from JS').then((response) =&gt; {
+    console.log(response); // &quot;Message from Python
+});
 ```
 &quot;&quot;&quot;</span>
 
+nbSection: <span class="hljs-string">&quot;### TypeScript Runtimes&quot;</span>
+nbText: <span class="hljs-string">&quot;&quot;&quot;
+You may want to interpret JavaScript &amp; TypeScript files and show the output
+in the UI. You can use `runtime=` and choose between Deno or Nodejs as
+your runtimes.
+&quot;&quot;&quot;</span>
+
+nbCodeSkip: 
+  <span class="hljs-comment"># Deno</span>
+  window.runtime = <span class="hljs-type">Deno</span>
+  window.show(<span class="hljs-string">&quot;my_file.ts&quot;</span>)
+
+  <span class="hljs-comment"># Nodejs</span>
+  window.runtime = <span class="hljs-type">NodeJS</span>
+  window.show(<span class="hljs-string">&quot;my_file.js&quot;</span>)
+
+  <span class="hljs-comment"># Disable</span>
+  window.scriptRuntime = <span class="hljs-type">None</span>
+ 
 nbSave
 </code></pre>
 </section><script>
