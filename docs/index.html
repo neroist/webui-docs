@@ -144,19 +144,15 @@ window.show(<span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot
 <pre class="nohighlight hljs nim"><span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
 <span class="hljs-comment"># Chrome</span>
-window.nbJsShowSource(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
+window.show(html, <span class="hljs-type">BrowserChrome</span>)
 
 <span class="hljs-comment"># Firefox</span>
-window.nbJsShowSource(html, <span class="hljs-type">BrowserFirefox</span>)
+window.show(html, <span class="hljs-type">BrowserFirefox</span>)
 
 <span class="hljs-comment"># Microsoft Edge</span>
 window.show(html, <span class="hljs-type">BrowserEdge</span>)
 
-<span class="hljs-comment"># Chromium</span>
-window.show(html, <span class="hljs-type">BrowserChromium</span>)
-
-<span class="hljs-comment"># Safari</span>
-window.show(html, <span class="hljs-type">BrowserSafari</span>)
+<span class="hljs-comment"># Other browsers...</span>
 
 <span class="hljs-comment"># Any available web browser</span>
 window.show(html, <span class="hljs-type">BrowserAny</span>)</pre>
@@ -193,7 +189,7 @@ window.show(newHtml)</pre>
 element with a specific ID, for example <code>&lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt;</code>.</p>
 <pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
   <span class="hljs-comment"># &lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt; gets clicked!</span>
-  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.elementName, <span class="hljs-string">&quot;!&quot;</span></pre>
+  <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.element, <span class="hljs-string">&quot;!&quot;</span></pre>
 <pre class="nb-output">Binding element MyID!</pre>
 <p>You can also have a return value on your function, it must be either of
 <code>string</code>, <code>int</code>, or <code>bool</code>. The return value will be automatically passed
@@ -211,10 +207,10 @@ back to the Javascript code for you.</p>
 <hr />
 <p>When you use <code>window.bind()</code>, your application will receive an event every
 time the user clicks on the specified HTML element. The event comes with
-the <code>elementName</code>, which is the HTML ID of the clicked element, for example,
+the <code>element</code>, which is the HTML ID of the clicked element, for example,
 <code>MyButton</code>, <code>MyInput</code>, etc. The event also comes with the WebUI unique
 element ID &amp; the unique window ID. Those two IDs are not generally needed.</p>
-<pre class="nohighlight hljs nim"><span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
+<pre class="nohighlight hljs nim">window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyButton&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.element, <span class="hljs-string">&quot; element&quot;</span></pre>
 <p>The <code>e</code> corresponds to <code>Event</code>, and it has these attributes:</p>
 <pre class="nohighlight hljs nim">e.window       <span class="hljs-comment"># The window the event occured on</span>
@@ -472,19 +468,15 @@ nbCodeSkip:
   <span class="hljs-keyword">const</span> html = <span class="hljs-string">&quot;&lt;html&gt;Hello!&lt;/html&gt;&quot;</span>
 
   <span class="hljs-comment"># Chrome</span>
-  window.nbJsShowSource(html, <span class="hljs-type">BrowserChrome</span>) <span class="hljs-comment"># you could also use showWindow</span>
+  window.show(html, <span class="hljs-type">BrowserChrome</span>)
 
   <span class="hljs-comment"># Firefox</span>
-  window.nbJsShowSource(html, <span class="hljs-type">BrowserFirefox</span>)
+  window.show(html, <span class="hljs-type">BrowserFirefox</span>)
 
   <span class="hljs-comment"># Microsoft Edge</span>
   window.show(html, <span class="hljs-type">BrowserEdge</span>)
 
-  <span class="hljs-comment"># Chromium</span>
-  window.show(html, <span class="hljs-type">BrowserChromium</span>)
-
-  <span class="hljs-comment"># Safari</span>
-  window.show(html, <span class="hljs-type">BrowserSafari</span>)
+  <span class="hljs-comment"># Other browsers...</span>
 
   <span class="hljs-comment"># Any available web browser</span>
   window.show(html, <span class="hljs-type">BrowserAny</span>)
@@ -531,7 +523,7 @@ element with a specific ID, for example `&lt;button id=&quot;MyID&quot;&gt;Hello
 nbCodeSkip:
   window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyID&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
     <span class="hljs-comment"># &lt;button id=&quot;MyID&quot;&gt;Hello&lt;/button&gt; gets clicked!</span>
-    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.elementName, <span class="hljs-string">&quot;!&quot;</span>
+    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element &quot;</span>, e.element, <span class="hljs-string">&quot;!&quot;</span>
 
 nbCapture:
   <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Binding element MyID!&quot;</span>
@@ -559,12 +551,12 @@ nbSection: <span class="hljs-string">&quot;### Events&quot;</span>
 nbText: <span class="hljs-string">&quot;&quot;&quot;
 When you use `window.bind()`, your application will receive an event every 
 time the user clicks on the specified HTML element. The event comes with 
-the `elementName`, which is the HTML ID of the clicked element, for example, 
+the `element`, which is the HTML ID of the clicked element, for example, 
 `MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
 element ID &amp; the unique window ID. Those two IDs are not generally needed.
 &quot;&quot;&quot;</span>
 nbCodeSkip:
-  <span class="hljs-keyword">proc</span> myProc(e: <span class="hljs-type">Event</span>) =
+  window.<span class="hljs-keyword">bind</span>(<span class="hljs-string">&quot;MyButton&quot;</span>) <span class="hljs-keyword">do</span> (e: <span class="hljs-type">Event</span>):
     <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;Hi!, You clicked on &quot;</span>, e.element, <span class="hljs-string">&quot; element&quot;</span>
 
 nbText: <span class="hljs-string">&quot;&quot;&quot;

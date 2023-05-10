@@ -211,7 +211,7 @@ nbSection: "### Events"
 nbText: """
 When you use `window.bind()`, your application will receive an event every 
 time the user clicks on the specified HTML element. The event comes with 
-the `elementName`, which is the HTML ID of the clicked element, for example, 
+the `element`, which is the HTML ID of the clicked element, for example, 
 `MyButton`, `MyInput`, etc. The event also comes with the WebUI unique 
 element ID & the unique window ID. Those two IDs are not generally needed.
 """
