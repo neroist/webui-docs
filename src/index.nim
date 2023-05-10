@@ -128,19 +128,15 @@ nbCodeSkip:
   const html = "<html>Hello!</html>"
 
   # Chrome
-  window.nbJsShowSource(html, BrowserChrome) # you could also use showWindow
+  window.show(html, BrowserChrome)
 
   # Firefox
-  window.nbJsShowSource(html, BrowserFirefox)
+  window.show(html, BrowserFirefox)
 
   # Microsoft Edge
   window.show(html, BrowserEdge)
 
-  # Chromium
-  window.show(html, BrowserChromium)
-
-  # Safari
-  window.show(html, BrowserSafari)
+  # Other browsers...
 
   # Any available web browser
   window.show(html, BrowserAny)
@@ -187,7 +183,7 @@ element with a specific ID, for example `<button id="MyID">Hello</button>`.
 nbCodeSkip:
   window.bind("MyID") do (e: Event):
     # <button id="MyID">Hello</button> gets clicked!
-    echo "Binding element ", e.elementName, "!"
+    echo "Binding element ", e.element, "!"
 
 nbCapture:
   echo "Binding element MyID!"
@@ -220,7 +216,7 @@ the `elementName`, which is the HTML ID of the clicked element, for example,
 element ID & the unique window ID. Those two IDs are not generally needed.
 """
 nbCodeSkip:
-  proc myProc(e: Event) =
+  window.bind("MyButton") do (e: Event):
     echo "Hi!, You clicked on ", e.element, " element"
 
 nbText: """
@@ -343,7 +339,7 @@ method like this `webui_fn('MyID_NoResponse', 'My Data');`.
 """
 
 nbCodeSkip:
-  window.bind("ExampleElement2") do (e: Event) -> string:
+  window.bind("MyID") do (e: Event) -> string:
     echo "Data from JavaScript: ", e.data # Message from JS
 
     return "Message from Nim"
