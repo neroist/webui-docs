@@ -363,14 +363,14 @@ your runtimes.
 
 nbCodeSkip: 
   # Deno
-  window.runtime = Deno
+  window.runtime = Runtime.Deno
   window.show("my_file.ts")
 
   # Nodejs
-  window.runtime = NodeJS
+  window.runtime = Runtime.NodeJS
   window.show("my_file.js")
 
   # Disable
-  window.runtime = None
+  window.runtime = Runtime.None
  
 nbSave
