@@ -128,18 +128,18 @@ nbCodeSkip:
   const html = "<html>Hello!</html>"
 
   # Chrome
-  window.show(html, BrowserChrome)
+  window.show(html, Browsers.Chrome)
 
   # Firefox
-  window.show(html, BrowserFirefox)
+  window.show(html, Browsers.Firefox)
 
   # Microsoft Edge
-  window.show(html, BrowserEdge)
+  window.show(html, Browsers.Edge)
 
   # Other browsers...
 
   # Any available web browser
-  window.show(html, BrowserAny)
+  window.show(html, Browsers.Any)
 
 nbText: """
 If you need to update the whole UI content, you can also use `show()`, which
